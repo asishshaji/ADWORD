@@ -71,7 +71,7 @@ class _MyAppState extends State<MyApp> {
     _firebaseMessaging.configure(
       onMessage: (Map<String, dynamic> message) async {
         Fluttertoast.showToast(
-            msg: message['title'],
+            msg: message['notification']['title'],
             toastLength: Toast.LENGTH_LONG,
             gravity: ToastGravity.BOTTOM,
             backgroundColor: Colors.white,
