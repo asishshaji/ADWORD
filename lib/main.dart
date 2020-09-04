@@ -4,8 +4,11 @@ import 'package:adword/pushnotifications.dart';
 import 'package:adword/repo/user_repo.dart';
 import 'package:adword/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,10 +23,64 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+Future<dynamic> myBackgroundHandler(Map<String, dynamic> message) {
+  return _MyAppState()._showNotification(message);
+}
+
+class MyApp extends StatefulWidget {
+  MyApp({Key key, this.userRepo}) : super(key: key);
   final UserRepo userRepo;
 
-  const MyApp({Key key, this.userRepo}) : super(key: key);
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future _showNotification(Map<String, dynamic> message) async {
+    var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+      'channel id',
+      'channel name',
+      'channel desc',
+      importance: Importance.Max,
+      priority: Priority.High,
+    );
+
+    var platformChannelSpecifics =
+        new NotificationDetails(androidPlatformChannelSpecifics, null);
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      'new message arived',
+      'i want ',
+      platformChannelSpecifics,
+      payload: 'Default_Sound',
+    );
+  }
+
+  Future selectNotification(String payload) async {
+    await flutterLocalNotificationsPlugin.cancelAll();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        Fluttertoast.showToast(
+            msg: message['title'],
+            toastLength: Toast.LENGTH_LONG,
+            gravity: ToastGravity.BOTTOM,
+            backgroundColor: Colors.white,
+            textColor: Colors.black,
+            fontSize: 16.0);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -35,7 +92,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: AuthNavigation(
-        userRepo: userRepo,
+        userRepo: widget.userRepo,
       ),
       onGenerateRoute: RouteGenerator.generateRoute,
     );

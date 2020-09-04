@@ -137,6 +137,7 @@ class _DashboardState extends State<Dashboard> {
                 ),
               )
             : Scaffold(
+                backgroundColor: Colors.white,
                 body: Center(
                   child: Column(
                     children: [

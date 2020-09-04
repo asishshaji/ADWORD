@@ -69,8 +69,10 @@ class _LoginFormState extends State<LoginForm> {
 
 class LoadingIndicator extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Center(
-        child: CircularProgressIndicator(),
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
       );
 }
 
