@@ -23,7 +23,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
-  String username, code, profilelink;
+  String username, code, profilelink, refCodeUsed;
   FirebaseStorage storageInstance = FirebaseStorage.instance;
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
@@ -81,6 +81,8 @@ class _SignUpState extends State<SignUp> {
           backgroundColor: Colors.indigo[400],
           onPressed: () async {
             if (_formKey.currentState.validate()) {
+              String myRefCode =
+                  DateTime.now().millisecondsSinceEpoch.toString();
               CustomUser user = CustomUser(
                 username: username,
                 phonenumber: widget.phonenumber,
@@ -88,6 +90,8 @@ class _SignUpState extends State<SignUp> {
                 code: code,
                 isVerified: false,
                 imageurl: _uploadedFileURL,
+                myRefCode: myRefCode.substring(9, myRefCode.length - 1),
+                refCodeUsed: refCodeUsed,
               );
               UserRepo().addUserToDB(user, widget.token);
               String msgToken = await FirebaseMessaging().getToken();
@@ -224,6 +228,28 @@ class _SignUpState extends State<SignUp> {
                           }
                           return null;
                         },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      TextFormField(
+                        onChanged: (value) {
+                          setState(() {
+                            refCodeUsed = value;
+                          });
+                        },
+                        keyboardType: TextInputType.text,
+                        textInputAction: TextInputAction.next,
+                        decoration: InputDecoration(
+                          fillColor: Colors.indigo[400],
+                          prefixIcon: Icon(
+                            Icons.person,
+                          ),
+                          labelText: "Referral Code",
+                          border: OutlineInputBorder(
+                            gapPadding: 5,
+                          ),
+                        ),
                       ),
                     ],
                   ),

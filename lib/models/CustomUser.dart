@@ -7,14 +7,20 @@ class CustomUser {
   final String weblink;
   final bool isVerified;
   final String imageurl;
+  final int joinedUsers;
+  final String myRefCode;
+  final String refCodeUsed;
 
   CustomUser({
     this.username,
     this.phonenumber,
     this.code,
     this.weblink,
-    this.isVerified,
+    this.isVerified = false,
     this.imageurl,
+    this.joinedUsers = 0,
+    this.myRefCode,
+    this.refCodeUsed,
   });
 
   Map<String, dynamic> toMap() {
@@ -25,6 +31,9 @@ class CustomUser {
       'weblink': weblink,
       'isVerified': isVerified,
       'imageurl': imageurl,
+      'joinedUsers': joinedUsers,
+      'myRefCode': myRefCode,
+      'refCodeUsed': refCodeUsed,
     };
   }
 
@@ -38,6 +47,9 @@ class CustomUser {
       weblink: map['weblink'],
       isVerified: map['isVerified'],
       imageurl: map['imageurl'],
+      joinedUsers: map['joinedUsers'],
+      myRefCode: map['myRefCode'],
+      refCodeUsed: map['refCodeUsed'],
     );
   }
 

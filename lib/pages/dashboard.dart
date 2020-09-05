@@ -136,6 +136,24 @@ class _DashboardState extends State<Dashboard> {
                         const SizedBox(
                           height: 40,
                         ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          "Your Referral code is ${widget.user.myRefCode}",
+                          style: GoogleFonts.dmSans(
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Text(
+                          "Users joined using your code ${widget.user.joinedUsers}",
+                          style: GoogleFonts.dmSans(
+                            fontSize: 18,
+                          ),
+                        ),
                       ],
                     ),
                   ),

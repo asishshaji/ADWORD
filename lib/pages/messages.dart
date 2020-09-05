@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
 import 'package:time_formatter/time_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -29,7 +28,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
       QuerySnapshot snapshot = await firebaseFirestore
           .collection("messages")
           .where("receiver", isEqualTo: state.user.code)
-          .orderBy("timestamp")
+          .orderBy("timestamp", descending: true)
           .get();
       snapshot.docs.forEach((element) {
         docs.add(element.id);
@@ -170,16 +169,20 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: [
-                                                        CircleAvatar(
-                                                          radius: 30.0,
-                                                          backgroundImage:
-                                                              NetworkImage(
-                                                            user.imageurl,
-                                                          ),
-                                                          backgroundColor:
-                                                              Colors
-                                                                  .transparent,
-                                                        ),
+                                                        user.imageurl != null
+                                                            ? CircleAvatar(
+                                                                radius: 30.0,
+                                                                backgroundImage:
+                                                                    NetworkImage(
+                                                                  user.imageurl,
+                                                                ),
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .transparent,
+                                                              )
+                                                            : Container(
+                                                                height: 2,
+                                                              ),
                                                         const SizedBox(
                                                           height: 8,
                                                         ),
@@ -196,7 +199,8 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                                         InkWell(
                                                           onTap: () async {
                                                             String url =
-                                                                user.weblink;
+                                                                "https://" +
+                                                                    user.weblink;
                                                             if (await canLaunch(
                                                                 url)) {
                                                               await launch(url);
