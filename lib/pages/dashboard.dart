@@ -57,11 +57,16 @@ class _DashboardState extends State<Dashboard> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CircleAvatar(
-                          radius: 30.0,
-                          backgroundImage: NetworkImage(widget.user.imageurl),
-                          backgroundColor: Colors.grey.shade200,
-                        ),
+                        widget.user.imageurl != null
+                            ? CircleAvatar(
+                                radius: 30.0,
+                                backgroundImage:
+                                    NetworkImage(widget.user.imageurl),
+                                backgroundColor: Colors.grey.shade200,
+                              )
+                            : Container(
+                                height: 150,
+                              ),
                         const SizedBox(
                           height: 15,
                         ),

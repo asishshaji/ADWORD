@@ -66,9 +66,17 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    var initializationSettings =
+        InitializationSettings(initializationSettingsAndroid, null);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
     super.initState();
 
     _firebaseMessaging.configure(
+      onBackgroundMessage: myBackgroundHandler,
       onMessage: (Map<String, dynamic> message) async {
         Fluttertoast.showToast(
             msg: message['notification']['title'],
