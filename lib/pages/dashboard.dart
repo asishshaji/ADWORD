@@ -2,6 +2,8 @@ import 'package:adword/bloc/authentication_bloc.dart';
 import 'package:adword/models/CustomUser.dart';
 import 'package:adword/models/Messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,6 +21,7 @@ class _DashboardState extends State<Dashboard> {
   TextEditingController _codeController = TextEditingController();
 
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  String refUsedCount;
 
   _sendRequest() async {
     if (_codeController.text.length != 0) {
@@ -33,7 +36,7 @@ class _DashboardState extends State<Dashboard> {
 
       firebaseFirestore
           .collection("messages")
-          .doc("${widget.user.code}_$code")
+          .doc("${widget.user.code.trim()}_${code.trim()}")
           .set(
               message.toMap(),
               SetOptions(
@@ -42,6 +45,22 @@ class _DashboardState extends State<Dashboard> {
 
       Navigator.pushNamed(context, "/mymessages");
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getRefs();
+    });
+  }
+
+  getRefs() async {
+    User user = FirebaseAuth.instance.currentUser;
+    DocumentSnapshot snapshot =
+        await firebaseFirestore.collection("users").doc("${user.uid}").get();
+    refUsedCount = snapshot.data()['joinedUsers'];
+    setState(() {});
   }
 
   @override
@@ -81,7 +100,6 @@ class _DashboardState extends State<Dashboard> {
                   child: Container(
                     child: Center(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const SizedBox(
                             height: 15,
@@ -186,7 +204,7 @@ class _DashboardState extends State<Dashboard> {
                                   ),
                                   Text(
                                     widget.user.joinedUsers != 0
-                                        ? "Referral used ${widget.user.joinedUsers}"
+                                        ? "Referral used : ${widget.user.joinedUsers}"
                                         : "No one used your referral",
                                     style: GoogleFonts.dmSans(
                                       fontSize: 16,
@@ -195,6 +213,44 @@ class _DashboardState extends State<Dashboard> {
                                 ],
                               ),
                             ),
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: RaisedButton(
+                              onPressed: () async {
+                                if (widget.user.joinedUsers >= 1) {
+                                  print("hey");
+                                  String token =
+                                      await FirebaseMessaging().getToken();
+
+                                  firebaseFirestore
+                                      .collection("claims")
+                                      .doc(widget.user.phonenumber)
+                                      .set({
+                                    "username": widget.user.username,
+                                    "claims": widget.user.joinedUsers,
+                                    "phone": widget.user.phonenumber,
+                                    "rewardGiven": false,
+                                    "token": token
+                                  });
+                                }
+                              },
+                              color: Colors.indigo[400],
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: Text(
+                                  "Claim rewards".toUpperCase(),
+                                  style: GoogleFonts.dmSans(
+                                      fontSize: 15, color: Colors.white),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 40,
                           ),
                         ],
                       ),

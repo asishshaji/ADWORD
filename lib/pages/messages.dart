@@ -124,7 +124,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                       Text(
                                         "${formatTime(int.parse(message.timestamp))}",
                                         style: GoogleFonts.dmSans(
-                                          fontSize: 18,
+                                          fontSize: 15,
                                           color: Colors.grey,
                                         ),
                                       ),
@@ -156,11 +156,11 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                                         BorderRadius.circular(
                                                             10.0)), //this right here
                                                 child: Container(
-                                                  height: 200,
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            12.0),
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.4,
+                                                  child: SingleChildScrollView(
                                                     child: Column(
                                                       mainAxisAlignment:
                                                           MainAxisAlignment
@@ -169,6 +169,9 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                                           CrossAxisAlignment
                                                               .center,
                                                       children: [
+                                                        const SizedBox(
+                                                          height: 30,
+                                                        ),
                                                         user.imageurl != null
                                                             ? CircleAvatar(
                                                                 radius: 30.0,
@@ -190,30 +193,37 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                                           user.username,
                                                           style: GoogleFonts
                                                               .dmSans(
-                                                            fontSize: 18,
+                                                            fontSize: 15,
                                                           ),
                                                         ),
                                                         const SizedBox(
                                                           height: 5,
                                                         ),
-                                                        InkWell(
-                                                          onTap: () async {
-                                                            String url =
-                                                                "https://" +
-                                                                    user.weblink;
-                                                            if (await canLaunch(
-                                                                url)) {
-                                                              await launch(url);
-                                                            } else {
-                                                              throw 'Could not launch $url';
-                                                            }
-                                                          },
-                                                          child: Text(
-                                                            user.weblink,
-                                                            style: GoogleFonts
-                                                                .dmSans(
-                                                              fontSize: 18,
-                                                            ),
+                                                        Text(
+                                                          user.religion,
+                                                          style: GoogleFonts
+                                                              .dmSans(
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          user.caste,
+                                                          style: GoogleFonts
+                                                              .dmSans(
+                                                            fontSize: 15,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        Text(
+                                                          "${user.age.toString()} years",
+                                                          style: GoogleFonts
+                                                              .dmSans(
+                                                            fontSize: 15,
                                                           ),
                                                         ),
                                                         const SizedBox(
@@ -234,7 +244,35 @@ class _MessagesScreenState extends State<MessagesScreen> {
                                                             user.phonenumber,
                                                             style: GoogleFonts
                                                                 .dmSans(
-                                                              fontSize: 18,
+                                                              fontSize: 15,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 5,
+                                                        ),
+                                                        RaisedButton(
+                                                          color: Colors
+                                                              .indigo[400],
+                                                          onPressed: () async {
+                                                            String url =
+                                                                "https://" +
+                                                                    user.weblink;
+                                                            if (await canLaunch(
+                                                                url)) {
+                                                              await launch(url);
+                                                            } else {
+                                                              throw 'Could not launch $url';
+                                                            }
+                                                          },
+                                                          child: Text(
+                                                            "View Profile"
+                                                                .toUpperCase(),
+                                                            style: GoogleFonts
+                                                                .dmSans(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14,
                                                             ),
                                                           ),
                                                         ),

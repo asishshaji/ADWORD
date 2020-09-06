@@ -23,7 +23,8 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
-  String username, code, profilelink, refCodeUsed;
+  String username, code, profilelink, refCodeUsed, religion, caste;
+  int age;
   FirebaseStorage storageInstance = FirebaseStorage.instance;
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
@@ -90,8 +91,11 @@ class _SignUpState extends State<SignUp> {
                 code: code,
                 isVerified: false,
                 imageurl: _uploadedFileURL,
-                myRefCode: myRefCode.substring(9, myRefCode.length - 1),
+                myRefCode: myRefCode.substring(4, myRefCode.length - 1),
                 refCodeUsed: refCodeUsed,
+                religion: religion,
+                caste: caste,
+                age: age,
               );
               UserRepo().addUserToDB(user, widget.token);
               String msgToken = await FirebaseMessaging().getToken();
@@ -110,21 +114,14 @@ class _SignUpState extends State<SignUp> {
         ),
         body: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(
-                height: 20,
-              ),
-              Container(
-                width: 200,
-                child: SvgPicture.asset(
-                  "assets/profile.svg",
-                  height: 250,
-                  fit: BoxFit.contain,
-                ),
+                height: 30,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 20.0, bottom: 5),
-                child: InkWell(
+                child: GestureDetector(
                   onTap: chooseFile,
                   child: CircleAvatar(
                     radius: 40,
@@ -135,8 +132,9 @@ class _SignUpState extends State<SignUp> {
                             height: 150,
                             fit: BoxFit.cover,
                           )
-                        : Container(
-                            height: 150,
+                        : Icon(
+                            Icons.person,
+                            color: Colors.grey.shade800,
                           ),
                   ),
                 ),
@@ -150,104 +148,193 @@ class _SignUpState extends State<SignUp> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            username = value;
-                          });
-                        },
-                        keyboardType: TextInputType.name,
-                        textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.person,
-                          ),
-                          labelText: "Username",
-                          border: OutlineInputBorder(
-                            gapPadding: 5,
+                      Card(
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            children: [
+                              TextFormField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    username = value;
+                                  });
+                                },
+                                keyboardType: TextInputType.name,
+                                textInputAction: TextInputAction.next,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.person,
+                                  ),
+                                  labelText: "Username",
+                                  border: OutlineInputBorder(
+                                    gapPadding: 5,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter your name';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TextFormField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    code = value;
+                                  });
+                                },
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                decoration: const InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.confirmation_number,
+                                  ),
+                                  labelText: "Profile ID",
+                                  border: OutlineInputBorder(
+                                    gapPadding: 5,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter valid code';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TextFormField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    profilelink = value;
+                                  });
+                                },
+                                keyboardType: TextInputType.url,
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.indigo[400],
+                                  labelText: "Profile link",
+                                  border: OutlineInputBorder(
+                                    gapPadding: 5,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter valid link';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TextFormField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    religion = value;
+                                  });
+                                },
+                                keyboardType: TextInputType.url,
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.indigo[400],
+                                  labelText: "Religion",
+                                  border: OutlineInputBorder(
+                                    gapPadding: 5,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter religion';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TextFormField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    caste = value;
+                                  });
+                                },
+                                keyboardType: TextInputType.url,
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.indigo[400],
+                                  labelText: "Caste",
+                                  border: OutlineInputBorder(
+                                    gapPadding: 5,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter caste';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              TextFormField(
+                                onChanged: (value) {
+                                  setState(() {
+                                    age = int.parse(value);
+                                  });
+                                },
+                                keyboardType: TextInputType.url,
+                                textInputAction: TextInputAction.next,
+                                decoration: InputDecoration(
+                                  fillColor: Colors.indigo[400],
+                                  labelText: "Age",
+                                  border: OutlineInputBorder(
+                                    gapPadding: 5,
+                                  ),
+                                ),
+                                validator: (value) {
+                                  if (value.isEmpty) {
+                                    return 'Enter age';
+                                  }
+                                  return null;
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                            ],
                           ),
                         ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Enter your name';
-                          }
-                          return null;
-                        },
                       ),
                       const SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
-                      TextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            code = value;
-                          });
-                        },
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        decoration: const InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.confirmation_number,
-                          ),
-                          labelText: "Code",
-                          border: OutlineInputBorder(
-                            gapPadding: 5,
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Enter valid code';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            profilelink = value;
-                          });
-                        },
-                        keyboardType: TextInputType.url,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          fillColor: Colors.indigo[400],
-                          prefixIcon: Icon(
-                            Icons.person,
-                          ),
-                          labelText: "Profile link",
-                          border: OutlineInputBorder(
-                            gapPadding: 5,
-                          ),
-                        ),
-                        validator: (value) {
-                          if (value.isEmpty) {
-                            return 'Enter valid link';
-                          }
-                          return null;
-                        },
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      TextFormField(
-                        onChanged: (value) {
-                          setState(() {
-                            refCodeUsed = value;
-                          });
-                        },
-                        keyboardType: TextInputType.text,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          fillColor: Colors.indigo[400],
-                          prefixIcon: Icon(
-                            Icons.person,
-                          ),
-                          labelText: "Referral Code",
-                          border: OutlineInputBorder(
-                            gapPadding: 5,
+                      Card(
+                        child: Container(
+                          padding: const EdgeInsets.all(20),
+                          child: TextFormField(
+                            onChanged: (value) {
+                              setState(() {
+                                refCodeUsed = value;
+                              });
+                            },
+                            keyboardType: TextInputType.text,
+                            textInputAction: TextInputAction.next,
+                            decoration: InputDecoration(
+                              fillColor: Colors.indigo[400],
+                              prefixIcon: Icon(
+                                Icons.person,
+                              ),
+                              labelText: "Referral Code",
+                              border: OutlineInputBorder(
+                                gapPadding: 5,
+                              ),
+                            ),
                           ),
                         ),
                       ),

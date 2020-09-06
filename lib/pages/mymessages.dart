@@ -26,7 +26,7 @@ class _MyMessagesState extends State<MyMessages> {
       QuerySnapshot snapshot = await firebaseFirestore
           .collection("messages")
           .where("sender", isEqualTo: state.user.code)
-          .orderBy("timestamp", descending: false)
+          .orderBy("timestamp", descending: true)
           .get();
       snapshot.docs.forEach((element) {
         myReq.add(Message.fromMap(element.data()));

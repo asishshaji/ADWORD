@@ -10,6 +10,9 @@ class CustomUser {
   final int joinedUsers;
   final String myRefCode;
   final String refCodeUsed;
+  final String religion;
+  final String caste;
+  final int age;
 
   CustomUser({
     this.username,
@@ -21,6 +24,9 @@ class CustomUser {
     this.joinedUsers = 0,
     this.myRefCode,
     this.refCodeUsed,
+    this.religion,
+    this.caste,
+    this.age,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +40,9 @@ class CustomUser {
       'joinedUsers': joinedUsers,
       'myRefCode': myRefCode,
       'refCodeUsed': refCodeUsed,
+      'religion': religion,
+      'caste': caste,
+      'age': age,
     };
   }
 
@@ -50,6 +59,9 @@ class CustomUser {
       joinedUsers: map['joinedUsers'],
       myRefCode: map['myRefCode'],
       refCodeUsed: map['refCodeUsed'],
+      religion: map['religion'],
+      caste: map['caste'],
+      age: map['age'],
     );
   }
 

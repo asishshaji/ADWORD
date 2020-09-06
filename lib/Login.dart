@@ -85,6 +85,7 @@ class NumberInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
+        mainAxisSize: MainAxisSize.max,
         children: <Widget>[
           const SizedBox(
             height: 20,
@@ -121,29 +122,32 @@ class NumberInput extends StatelessWidget {
                   }),
             ),
           ),
-          Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            margin: const EdgeInsets.only(
-              top: 20,
-            ),
-            child: RaisedButton(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: new BorderRadius.circular(8.0),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.9,
+              margin: const EdgeInsets.only(
+                top: 20,
               ),
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(
-                      phoNo: "+91" + _phoneTextController.value.text));
-                }
-              },
-              color: Colors.indigo[400],
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  "GET OTP",
-                  style: GoogleFonts.dmSans(
-                    color: Colors.white,
+              child: RaisedButton(
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: new BorderRadius.circular(8.0),
+                ),
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(
+                        phoNo: "+91" + _phoneTextController.value.text));
+                  }
+                },
+                color: Colors.indigo[400],
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    "GET OTP",
+                    style: GoogleFonts.dmSans(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
