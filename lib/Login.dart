@@ -70,6 +70,7 @@ class _LoginFormState extends State<LoginForm> {
 class LoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.white,
         body: Center(
           child: CircularProgressIndicator(),
         ),
@@ -157,7 +158,6 @@ class NumberInput extends StatelessWidget {
   }
 
   String validateMobile(String value) {
-    // Indian Mobile number are of 10 digit only
     if (value.length != 10)
       return 'Enter valid mobile number';
     else
@@ -202,7 +202,6 @@ class EditTextUtils {
 class OtpInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

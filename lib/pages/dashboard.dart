@@ -19,6 +19,31 @@ class _DashboardState extends State<Dashboard> {
   TextEditingController _codeController = TextEditingController();
 
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  _sendRequest() async {
+    if (_codeController.text.length != 0) {
+      String code = _codeController.text;
+
+      Message message = Message(
+        isRead: false,
+        receiver: code,
+        timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+        sender: widget.user.code,
+      );
+
+      firebaseFirestore
+          .collection("messages")
+          .doc("${widget.user.code}_$code")
+          .set(
+              message.toMap(),
+              SetOptions(
+                merge: true,
+              ));
+
+      Navigator.pushNamed(context, "/mymessages");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -52,109 +77,127 @@ class _DashboardState extends State<Dashboard> {
                   elevation: 0,
                   backgroundColor: Colors.indigo[400],
                 ),
-                body: Container(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        widget.user.imageurl != null
-                            ? CircleAvatar(
-                                radius: 30.0,
-                                backgroundImage:
-                                    NetworkImage(widget.user.imageurl),
-                                backgroundColor: Colors.grey.shade200,
-                              )
-                            : Container(
-                                height: 150,
-                              ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Your code is ${widget.user.code}",
-                          style: GoogleFonts.dmSans(
-                            fontSize: 18,
+                body: SingleChildScrollView(
+                  child: Container(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const SizedBox(
+                            height: 15,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Container(
-                          width: 200,
-                          child: TextField(
-                            controller: _codeController,
-                            decoration: InputDecoration(
-                              labelText: "Code",
-                              border: OutlineInputBorder(
-                                gapPadding: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        RaisedButton(
-                          color: Colors.indigo[400],
-                          onPressed: () async {
-                            if (_codeController.text.length != 0) {
-                              String code = _codeController.text;
-
-                              Message message = Message(
-                                isRead: false,
-                                receiver: code,
-                                timestamp: DateTime.now()
-                                    .millisecondsSinceEpoch
-                                    .toString(),
-                                sender: widget.user.code,
-                              );
-
-                              firebaseFirestore
-                                  .collection("messages")
-                                  .doc("${widget.user.code}_$code")
-                                  .set(
-                                      message.toMap(),
-                                      SetOptions(
-                                        merge: true,
-                                      ));
-
-                              Navigator.pushNamed(context, "/mymessages");
-                            }
-                          },
-                          child: Container(
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: Text(
-                                "Send REquest".toUpperCase(),
-                                style: GoogleFonts.dmSans(
-                                  color: Colors.white,
-                                ),
+                          Card(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 20,
+                                  ),
+                                  widget.user.imageurl != null
+                                      ? CircleAvatar(
+                                          radius: 35.0,
+                                          backgroundImage: NetworkImage(
+                                              widget.user.imageurl),
+                                          backgroundColor: Colors.transparent,
+                                        )
+                                      : Container(
+                                          height: 150,
+                                        ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Text(
+                                      "Profile ID: ${widget.user.code}",
+                                      style: GoogleFonts.dmSans(
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
-                        ),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Your Referral code is ${widget.user.myRefCode}",
-                          style: GoogleFonts.dmSans(
-                            fontSize: 18,
+                          const SizedBox(
+                            height: 15,
                           ),
-                        ),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                          "Users joined using your code ${widget.user.joinedUsers}",
-                          style: GoogleFonts.dmSans(
-                            fontSize: 18,
+                          Card(
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(20.0),
+                                    child: Container(
+                                      width: 200,
+                                      child: TextField(
+                                        controller: _codeController,
+                                        decoration: InputDecoration(
+                                          labelText: "Partner id".toUpperCase(),
+                                          labelStyle: GoogleFonts.dmSans(
+                                            fontSize: 15,
+                                          ),
+                                          border: OutlineInputBorder(
+                                            gapPadding: 2,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  RaisedButton(
+                                    color: Colors.indigo[400],
+                                    onPressed: _sendRequest,
+                                    child: Container(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(12.0),
+                                        child: Text(
+                                          "express interest".toUpperCase(),
+                                          style: GoogleFonts.dmSans(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(
+                            height: 15,
+                          ),
+                          Card(
+                            child: Container(
+                              padding: const EdgeInsets.all(20.0),
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Your Referral code is ${widget.user.myRefCode}",
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 15,
+                                  ),
+                                  Text(
+                                    widget.user.joinedUsers != 0
+                                        ? "Referral used ${widget.user.joinedUsers}"
+                                        : "No one used your referral",
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
