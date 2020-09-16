@@ -44,6 +44,7 @@ class _LoginFormState extends State<LoginForm> {
       builder: (context, state) {
         return SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.white,
             body: getViewAsPerState(state),
           ),
         );
@@ -69,11 +70,8 @@ class _LoginFormState extends State<LoginForm> {
 
 class LoadingIndicator extends StatelessWidget {
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.white,
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
+  Widget build(BuildContext context) => Center(
+        child: CircularProgressIndicator(),
       );
 }
 

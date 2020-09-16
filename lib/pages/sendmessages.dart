@@ -8,14 +8,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:time_formatter/time_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MessagesScreen extends StatefulWidget {
-  MessagesScreen({Key key}) : super(key: key);
+class SendMessagesScreen extends StatefulWidget {
+  SendMessagesScreen({Key key}) : super(key: key);
 
   @override
-  _MessagesScreenState createState() => _MessagesScreenState();
+  _SendMessagesScreenState createState() => _SendMessagesScreenState();
 }
 
-class _MessagesScreenState extends State<MessagesScreen> {
+class _SendMessagesScreenState extends State<SendMessagesScreen> {
   List<Message> myReq = List();
   List<String> docs = List();
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;

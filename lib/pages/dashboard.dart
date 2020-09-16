@@ -81,7 +81,7 @@ class _DashboardState extends State<Dashboard> {
                   actions: [
                     IconButton(
                       icon: Icon(
-                        Icons.exit_to_app,
+                        Icons.wifi_tethering,
                       ),
                       onPressed: () {
                         BlocProvider.of<AuthenticationBloc>(context)

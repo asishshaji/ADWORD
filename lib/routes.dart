@@ -1,6 +1,6 @@
 import 'package:adword/pages/dashboard.dart';
-import 'package:adword/pages/messages.dart';
-import 'package:adword/pages/mymessages.dart';
+import 'package:adword/pages/sendmessages.dart';
+import 'package:adword/pages/recievedmessages.dart';
 import 'package:adword/pages/sign_up_form.dart';
 import 'package:flutter/material.dart';
 
@@ -13,9 +13,9 @@ class RouteGenerator {
       case "/dashboard":
         return MaterialPageRoute(builder: (_) => Dashboard());
       case "/messages":
-        return MaterialPageRoute(builder: (_) => MessagesScreen());
+        return MaterialPageRoute(builder: (_) => SendMessagesScreen());
       case "/mymessages":
-        return MaterialPageRoute(builder: (_) => MyMessages());
+        return MaterialPageRoute(builder: (_) => RecievedMessagesScreen());
     }
   }
 }

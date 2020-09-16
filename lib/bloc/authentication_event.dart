@@ -8,9 +8,6 @@ abstract class AuthenticationEvent {
 class AppStarted extends AuthenticationEvent {
   @override
   String toString() => 'AppStarted';
-
-  @override
-  List<Object> get props => [];
 }
 
 class LoggedIn extends AuthenticationEvent {
@@ -20,16 +17,9 @@ class LoggedIn extends AuthenticationEvent {
 
   @override
   String toString() => 'LoggedIn { token: $token }';
-
-  @override
-  List<Object> get props => [token];
 }
 
 class LoggedOut extends AuthenticationEvent {
   @override
   String toString() => 'LoggedOut';
-
-  @override
-  // TODO: implement props
-  List<Object> get props => [];
 }
