@@ -28,6 +28,7 @@ dependencies:
   time_formatter: ^1.0.0+5
   flutter_local_notifications: ^1.4.4+4
   fluttertoast: ^7.0.4
+  clipboard_manager: ^0.0.4
 
 dev_dependencies:
   flutter_test:

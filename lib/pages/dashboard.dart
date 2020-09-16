@@ -84,8 +84,7 @@ class _DashboardState extends State<Dashboard> {
                         Icons.wifi_tethering,
                       ),
                       onPressed: () {
-                        BlocProvider.of<AuthenticationBloc>(context)
-                            .add(LoggedOut());
+                        Navigator.pushNamed(context, "/similar");
                       },
                     )
                   ],

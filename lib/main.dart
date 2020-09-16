@@ -98,6 +98,9 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: Colors.white,
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
+        appBarTheme: AppBarTheme(
+          color: Colors.indigo[400],
+        ),
       ),
       home: AuthNavigation(
         userRepo: widget.userRepo,
