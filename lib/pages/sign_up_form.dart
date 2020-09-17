@@ -95,16 +95,19 @@ class _SignUpState extends State<SignUp> {
                 religion: religion,
                 caste: caste,
                 age: age,
+                joinedTime: DateTime.now().millisecondsSinceEpoch.toString(),
               );
-              UserRepo().addUserToDB(user, widget.token);
-              String msgToken = await FirebaseMessaging().getToken();
+              bool added = await UserRepo().addUserToDB(user, widget.token);
+              if (added) {
+                String msgToken = await FirebaseMessaging().getToken();
 
-              FirebaseFirestore.instance
-                  .collection("tokens")
-                  .add({"token": msgToken, "code": code});
+                FirebaseFirestore.instance
+                    .collection("tokens")
+                    .add({"token": msgToken, "code": code});
 
-              BlocProvider.of<AuthenticationBloc>(context)
-                  .add(LoggedIn(token: widget.token));
+                BlocProvider.of<AuthenticationBloc>(context)
+                    .add(LoggedIn(token: widget.token));
+              }
             }
           },
           child: Icon(
@@ -148,6 +151,7 @@ class _SignUpState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Card(
+                        elevation: 2,
                         child: Container(
                           padding: const EdgeInsets.all(20),
                           child: Column(
@@ -314,6 +318,7 @@ class _SignUpState extends State<SignUp> {
                         height: 10,
                       ),
                       Card(
+                        elevation: 2,
                         child: Container(
                           padding: const EdgeInsets.all(20),
                           child: TextFormField(

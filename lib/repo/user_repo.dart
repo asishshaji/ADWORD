@@ -47,12 +47,15 @@ class UserRepo {
     return user;
   }
 
-  Future<void> addUserToDB(CustomUser user, String token) async {
+  Future<bool> addUserToDB(CustomUser user, String token) async {
     // TODO
 
-    await _firebaseFirestore
-        .collection("users")
-        .doc(token) //set uid here or else anyone reset a user
-        .set(user.toMap());
+    DocumentReference docRef =
+        await _firebaseFirestore.collection("users").doc(token);
+
+    //set uid here or else anyone reset a user
+    docRef.set(user.toMap());
+
+    return docRef != null;
   }
 }

@@ -31,7 +31,7 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
       QuerySnapshot snapshot = await firebaseFirestore
           .collection("users")
           .where("religion", isEqualTo: state.user.religion)
-          .orderBy("timestamp", descending: true)
+          .orderBy("joinedTime", descending: true)
           .get();
       snapshot.docs.forEach((element) {
         users.add(CustomUser.fromMap(element.data()));
@@ -46,6 +46,10 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.indigo[400],
+        title: Text(
+          "Users in your circle",
+          style: GoogleFonts.dmSans(),
+        ),
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
@@ -78,7 +82,7 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
             ),
             subtitle: users[index].joinedTime != null
                 ? Text(
-                    formatTime(int.parse(users[index].joinedTime)),
+                    "Joined ${formatTime(int.parse(users[index].joinedTime))}",
                     style: GoogleFonts.dmSans(
                       color: Colors.grey,
                     ),
