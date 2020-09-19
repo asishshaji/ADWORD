@@ -45,7 +45,6 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo[400],
         title: Text(
           "Users in your circle",
           style: GoogleFonts.dmSans(),
@@ -58,7 +57,7 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
               ClipboardManager.copyToClipBoard(users[index].code)
                   .then((result) {
                 final snackBar = SnackBar(
-                  backgroundColor: Colors.indigo[300],
+                  backgroundColor: Color.fromRGBO(0, 204, 184, 1),
                   content: Text(
                     'Profile ID: ${users[index].code} copied',
                     style: GoogleFonts.dmSans(

@@ -49,7 +49,6 @@ class _RecievedMessagesScreenState extends State<RecievedMessagesScreen> {
       child: Scaffold(
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.indigo[400],
           centerTitle: true,
           title: Text(
             "Send Requests",
@@ -72,7 +71,7 @@ class _RecievedMessagesScreenState extends State<RecievedMessagesScreen> {
               ),
               trailing: Icon(
                 message.isRead ? Mdi.checkAll : Mdi.check,
-                color: Colors.indigo[400],
+                color: Color.fromRGBO(0, 204, 184, 1),
               ),
             );
           },

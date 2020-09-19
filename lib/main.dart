@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         appBarTheme: AppBarTheme(
-          color: Colors.indigo[400],
+          color: Color.fromRGBO(179, 0, 116, 1),
         ),
       ),
       home: AuthNavigation(

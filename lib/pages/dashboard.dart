@@ -1,12 +1,9 @@
-import 'package:adword/bloc/authentication_bloc.dart';
 import 'package:adword/models/CustomUser.dart';
 import 'package:adword/models/Messages.dart';
-import 'package:avatar_glow/avatar_glow.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -70,7 +67,7 @@ class _DashboardState extends State<Dashboard> {
         child: widget.user.isVerified
             ? Scaffold(
                 floatingActionButton: FloatingActionButton(
-                  backgroundColor: Colors.indigo[400],
+                  backgroundColor: Color.fromRGBO(0, 204, 184, 1),
                   onPressed: () {
                     Navigator.pushNamed(context, "/messages");
                   },
@@ -78,6 +75,8 @@ class _DashboardState extends State<Dashboard> {
                     Icons.message,
                   ),
                 ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.centerFloat,
                 appBar: AppBar(
                   actions: [
                     Padding(
@@ -97,7 +96,6 @@ class _DashboardState extends State<Dashboard> {
                     style: GoogleFonts.dmSans(),
                   ),
                   elevation: 0,
-                  backgroundColor: Colors.indigo[400],
                 ),
                 body: SingleChildScrollView(
                   child: Container(
@@ -107,93 +105,60 @@ class _DashboardState extends State<Dashboard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisSize: MainAxisSize.max,
                       children: [
-                        Center(
-                          child: Card(
-                            elevation: 2,
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.85,
-                              child: Column(
-                                children: [
-                                  const SizedBox(
-                                    height: 20,
-                                  ),
-                                  widget.user.imageurl != null
-                                      ? CircleAvatar(
-                                          radius: 35.0,
-                                          backgroundImage: NetworkImage(
-                                              widget.user.imageurl),
-                                          backgroundColor: Colors.transparent,
-                                        )
-                                      : Container(
-                                          height: 150,
-                                        ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(20.0),
-                                    child: Text(
-                                      "Profile ID: ${widget.user.code}",
-                                      style: GoogleFonts.dmSans(
-                                        fontSize: 16,
-                                      ),
+                        buildProfileSection(context),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          child: Column(
+                            children: [
+                              Container(
+                                height: 50,
+                                child: TextField(
+                                  controller: _codeController,
+                                  decoration: InputDecoration(
+                                    labelText: "Enter Partner ID",
+                                    labelStyle: GoogleFonts.dmSans(
+                                      fontSize: 15,
+                                    ),
+                                    border: OutlineInputBorder(
+                                      gapPadding: 2,
                                     ),
                                   ),
-                                ],
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                        Card(
-                          elevation: 2,
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.85,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Container(
-                                    width: 200,
-                                    child: TextField(
-                                      controller: _codeController,
-                                      decoration: InputDecoration(
-                                        labelText: "Partner id".toUpperCase(),
-                                        labelStyle: GoogleFonts.dmSans(
-                                          fontSize: 15,
-                                        ),
-                                        border: OutlineInputBorder(
-                                          gapPadding: 2,
-                                        ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              RaisedButton(
+                                elevation: 4,
+                                color: Color.fromRGBO(0, 204, 184, 1),
+                                onPressed: _sendRequest,
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Text(
+                                      "express interest".toUpperCase(),
+                                      style: GoogleFonts.dmSans(
+                                        color: Colors.white,
+                                        fontSize: 15,
                                       ),
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
                                 ),
-                                RaisedButton(
-                                  elevation: 4,
-                                  color: Colors.indigo[400],
-                                  onPressed: _sendRequest,
-                                  child: Container(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Text(
-                                        "express interest".toUpperCase(),
-                                        style: GoogleFonts.dmSans(
-                                          color: Colors.white,
-                                          fontSize: 15,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                            ],
                           ),
                         ),
                         Card(
                           elevation: 2,
                           child: Container(
                             padding: const EdgeInsets.all(20.0),
-                            width: MediaQuery.of(context).size.width * 0.85,
+                            width: MediaQuery.of(context).size.width * 0.8,
                             child: Column(
                               children: [
                                 Text(
@@ -221,7 +186,7 @@ class _DashboardState extends State<Dashboard> {
                             ? Material(
                                 child: Container(
                                   width:
-                                      MediaQuery.of(context).size.width * 0.85,
+                                      MediaQuery.of(context).size.width * 0.8,
                                   child: RaisedButton(
                                     elevation: 4,
                                     onPressed: () async {
@@ -241,7 +206,7 @@ class _DashboardState extends State<Dashboard> {
                                         });
                                       }
                                     },
-                                    color: Colors.indigo[400],
+                                    color: Color.fromRGBO(0, 204, 184, 1),
                                     child: Padding(
                                       padding: const EdgeInsets.all(12.0),
                                       child: Row(
@@ -251,8 +216,9 @@ class _DashboardState extends State<Dashboard> {
                                           Text(
                                             "Claim your rewards".toUpperCase(),
                                             style: GoogleFonts.dmSans(
-                                                fontSize: 15,
-                                                color: Colors.white),
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           SvgPicture.asset(
                                             "assets/reward.svg",
@@ -304,5 +270,38 @@ class _DashboardState extends State<Dashboard> {
                   ),
                 ),
               ));
+  }
+
+  Center buildProfileSection(BuildContext context) {
+    return Center(
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.85,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 20,
+            ),
+            widget.user.imageurl != null
+                ? CircleAvatar(
+                    radius: 35.0,
+                    backgroundImage: NetworkImage(widget.user.imageurl),
+                    backgroundColor: Colors.transparent,
+                  )
+                : Container(
+                    height: 150,
+                  ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Text(
+                "Profile ID: ${widget.user.code}",
+                style: GoogleFonts.dmSans(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

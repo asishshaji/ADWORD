@@ -82,79 +82,75 @@ class NumberInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          const SizedBox(
-            height: 20,
-          ),
-          Container(
-            width: 200,
-            child: SvgPicture.asset(
-              "assets/mobile.svg",
-              height: 300,
-              fit: BoxFit.contain,
-            ),
-          ),
-          Text(
-            "OTP Verification",
-            style: GoogleFonts.dmSans(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-            child: Form(
-              key: _formKey,
-              child: EditTextUtils().getCustomEditTextArea(
-                  labelValue: "Enter Mobile Number",
-                  controller: _phoneTextController,
-                  keyboardType: TextInputType.number,
-                  icon: Icons.phone,
-                  validator: (value) {
-                    return validateMobile(value);
-                  }),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              margin: const EdgeInsets.only(
-                top: 20,
+      child: Container(
+        height: MediaQuery.of(context).size.height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            Container(
+              width: 100,
+              child: Image.asset(
+                "assets/logo.png",
+                height: 100,
+                fit: BoxFit.contain,
               ),
-              child: RaisedButton(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: new BorderRadius.circular(8.0),
+            ),
+            Column(
+              children: [
+                Text(
+                  "OTP Verification",
+                  style: GoogleFonts.dmSans(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
                 ),
-                onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(
-                        phoNo: "+91" + _phoneTextController.value.text));
-                  }
-                },
-                color: Colors.indigo[400],
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    "GET OTP",
-                    style: GoogleFonts.dmSans(
-                      color: Colors.white,
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: Form(
+                    key: _formKey,
+                    child: EditTextUtils().getCustomEditTextArea(
+                        labelValue: "Enter Mobile Number",
+                        controller: _phoneTextController,
+                        keyboardType: TextInputType.number,
+                        icon: Icons.phone,
+                        validator: (value) {
+                          return validateMobile(value);
+                        }),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  margin: const EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: RaisedButton(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(8.0),
+                    ),
+                    onPressed: () {
+                      if (_formKey.currentState.validate()) {
+                        BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(
+                            phoNo: "+91" + _phoneTextController.value.text));
+                      }
+                    },
+                    color: Color.fromRGBO(0, 204, 184, 1),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "GET OTP",
+                        style: GoogleFonts.dmSans(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-          ),
-          const SizedBox(
-            height: 30,
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -242,7 +238,7 @@ class OtpInput extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: new BorderRadius.circular(8.0),
               ),
-              color: Colors.indigo[400],
+              color: Color.fromRGBO(0, 204, 184, 1),
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(

@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 
 class SignUp extends StatefulWidget {
@@ -22,7 +23,7 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
-  String username, code, profilelink, refCodeUsed, religion, caste;
+  String username, code, profilelink, refCodeUsed, religion, caste, gender;
   int age;
   FirebaseStorage storageInstance = FirebaseStorage.instance;
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -77,279 +78,363 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
+        appBar: AppBar(
+          elevation: 0,
+        ),
         floatingActionButton: FloatingActionButton(
           backgroundColor: Colors.indigo[400],
-          onPressed: () async {
-            if (_formKey.currentState.validate()) {
-              String myRefCode =
-                  DateTime.now().millisecondsSinceEpoch.toString();
-              CustomUser user = CustomUser(
-                username: username,
-                phonenumber: widget.phonenumber,
-                weblink: profilelink,
-                code: code,
-                isVerified: false,
-                imageurl: _uploadedFileURL,
-                myRefCode: myRefCode.substring(4, myRefCode.length - 1),
-                refCodeUsed: refCodeUsed,
-                religion: religion,
-                caste: caste,
-                age: age,
-                joinedTime: DateTime.now().millisecondsSinceEpoch.toString(),
-              );
-              bool added = await UserRepo().addUserToDB(user, widget.token);
-              if (added) {
-                String msgToken = await FirebaseMessaging().getToken();
-
-                FirebaseFirestore.instance
-                    .collection("tokens")
-                    .add({"token": msgToken, "code": code});
-
-                BlocProvider.of<AuthenticationBloc>(context)
-                    .add(LoggedIn(token: widget.token));
-              }
-            }
-          },
-          child: Icon(
-            Icons.arrow_forward_ios,
+          shape: RoundedRectangleBorder(),
+          onPressed: () async {},
+          child: Image.asset(
+            "assets/regLogo.png",
+            fit: BoxFit.contain,
           ),
         ),
         body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 30,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20.0, bottom: 5),
-                child: GestureDetector(
-                  onTap: chooseFile,
-                  child: CircleAvatar(
-                    radius: 40,
-                    backgroundColor: Colors.grey.shade100,
-                    child: _uploadedFileURL != null
-                        ? Image.network(
-                            _uploadedFileURL,
-                            height: 150,
-                            fit: BoxFit.cover,
-                          )
-                        : Icon(
-                            Icons.person,
-                            color: Colors.grey.shade800,
-                          ),
+          child: Container(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const SizedBox(
+                  height: 40,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5),
+                  child: GestureDetector(
+                    onTap: chooseFile,
+                    child: CircleAvatar(
+                      radius: 50,
+                      backgroundColor: Colors.grey.shade100,
+                      child: _uploadedFileURL != null
+                          ? Image.network(
+                              _uploadedFileURL,
+                              height: 150,
+                              fit: BoxFit.cover,
+                            )
+                          : Text(
+                              "Upload Profile Picture",
+                              style: GoogleFonts.dmSans(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                    ),
                   ),
                 ),
-              ),
-              Form(
-                key: _formKey,
-                child: Container(
-                  padding: const EdgeInsets.all(
-                    20,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Card(
-                        elevation: 2,
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            children: [
-                              TextFormField(
-                                onChanged: (value) {
-                                  setState(() {
-                                    username = value;
-                                  });
-                                },
-                                keyboardType: TextInputType.name,
-                                textInputAction: TextInputAction.next,
-                                decoration: const InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.person,
-                                  ),
-                                  labelText: "Username",
-                                  border: OutlineInputBorder(
-                                    gapPadding: 5,
+                Form(
+                  key: _formKey,
+                  child: Container(
+                    padding: const EdgeInsets.all(
+                      20,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Card(
+                          elevation: 2,
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              children: [
+                                Container(
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        username = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.name,
+                                    textInputAction: TextInputAction.next,
+                                    decoration: const InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.person,
+                                      ),
+                                      labelText: "Username",
+                                      border: OutlineInputBorder(
+                                        gapPadding: 5,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Enter your name';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Enter your name';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        code = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.text,
+                                    textInputAction: TextInputAction.next,
+                                    decoration: const InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.confirmation_number,
+                                      ),
+                                      labelText: "Profile ID",
+                                      border: OutlineInputBorder(
+                                        gapPadding: 5,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Enter valid code';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        profilelink = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.url,
+                                    textInputAction: TextInputAction.next,
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.indigo[400],
+                                      labelText: "Profile link",
+                                      border: OutlineInputBorder(
+                                        gapPadding: 5,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Enter valid link';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        religion = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.url,
+                                    textInputAction: TextInputAction.next,
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.indigo[400],
+                                      labelText: "Religion",
+                                      border: OutlineInputBorder(
+                                        gapPadding: 5,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Enter religion';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        caste = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.url,
+                                    textInputAction: TextInputAction.next,
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.indigo[400],
+                                      labelText: "Caste",
+                                      border: OutlineInputBorder(
+                                        gapPadding: 5,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Enter caste';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        gender = value;
+                                      });
+                                    },
+                                    keyboardType: TextInputType.url,
+                                    textInputAction: TextInputAction.next,
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.indigo[400],
+                                      labelText: "Gender(M/F)",
+                                      border: OutlineInputBorder(
+                                        gapPadding: 5,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Enter gender';
+                                      } else if (value != "M" || value != "M") {
+                                        return "Enter a valid gender";
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                Container(
+                                  child: TextFormField(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        age = int.parse(value);
+                                      });
+                                    },
+                                    keyboardType: TextInputType.url,
+                                    textInputAction: TextInputAction.next,
+                                    decoration: InputDecoration(
+                                      fillColor: Colors.indigo[400],
+                                      labelText: "Age",
+                                      border: OutlineInputBorder(
+                                        gapPadding: 5,
+                                      ),
+                                    ),
+                                    validator: (value) {
+                                      if (value.isEmpty) {
+                                        return 'Enter age';
+                                      }
+                                      return null;
+                                    },
+                                  ),
+                                ),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Card(
+                          elevation: 2,
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            child: Container(
+                              child: TextFormField(
                                 onChanged: (value) {
                                   setState(() {
-                                    code = value;
+                                    refCodeUsed = value;
                                   });
                                 },
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
+                                  fillColor: Colors.indigo[400],
                                   prefixIcon: Icon(
-                                    Icons.confirmation_number,
+                                    Icons.person,
                                   ),
-                                  labelText: "Profile ID",
+                                  labelText: "Referral Code",
                                   border: OutlineInputBorder(
                                     gapPadding: 5,
                                   ),
                                 ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Enter valid code';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
-                                onChanged: (value) {
-                                  setState(() {
-                                    profilelink = value;
-                                  });
-                                },
-                                keyboardType: TextInputType.url,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.indigo[400],
-                                  labelText: "Profile link",
-                                  border: OutlineInputBorder(
-                                    gapPadding: 5,
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Enter valid link';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
-                                onChanged: (value) {
-                                  setState(() {
-                                    religion = value;
-                                  });
-                                },
-                                keyboardType: TextInputType.url,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.indigo[400],
-                                  labelText: "Religion",
-                                  border: OutlineInputBorder(
-                                    gapPadding: 5,
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Enter religion';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
-                                onChanged: (value) {
-                                  setState(() {
-                                    caste = value;
-                                  });
-                                },
-                                keyboardType: TextInputType.url,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.indigo[400],
-                                  labelText: "Caste",
-                                  border: OutlineInputBorder(
-                                    gapPadding: 5,
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Enter caste';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              TextFormField(
-                                onChanged: (value) {
-                                  setState(() {
-                                    age = int.parse(value);
-                                  });
-                                },
-                                keyboardType: TextInputType.url,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.indigo[400],
-                                  labelText: "Age",
-                                  border: OutlineInputBorder(
-                                    gapPadding: 5,
-                                  ),
-                                ),
-                                validator: (value) {
-                                  if (value.isEmpty) {
-                                    return 'Enter age';
-                                  }
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Card(
-                        elevation: 2,
-                        child: Container(
-                          padding: const EdgeInsets.all(20),
-                          child: TextFormField(
-                            onChanged: (value) {
-                              setState(() {
-                                refCodeUsed = value;
-                              });
-                            },
-                            keyboardType: TextInputType.text,
-                            textInputAction: TextInputAction.next,
-                            decoration: InputDecoration(
-                              fillColor: Colors.indigo[400],
-                              prefixIcon: Icon(
-                                Icons.person,
-                              ),
-                              labelText: "Referral Code",
-                              border: OutlineInputBorder(
-                                gapPadding: 5,
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-            ],
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.9,
+                  margin: const EdgeInsets.only(
+                    top: 20,
+                  ),
+                  child: RaisedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState.validate()) {
+                        String myRefCode =
+                            DateTime.now().millisecondsSinceEpoch.toString();
+                        CustomUser user = CustomUser(
+                          username: username,
+                          phonenumber: widget.phonenumber,
+                          weblink: profilelink,
+                          code: code,
+                          isVerified: false,
+                          imageurl: _uploadedFileURL,
+                          myRefCode:
+                              myRefCode.substring(4, myRefCode.length - 1),
+                          refCodeUsed: refCodeUsed,
+                          religion: religion,
+                          caste: caste,
+                          age: age,
+                          joinedTime:
+                              DateTime.now().millisecondsSinceEpoch.toString(),
+                          gender: gender,
+                        );
+                        bool added =
+                            await UserRepo().addUserToDB(user, widget.token);
+                        if (added) {
+                          String msgToken =
+                              await FirebaseMessaging().getToken();
+
+                          FirebaseFirestore.instance
+                              .collection("tokens")
+                              .add({"token": msgToken, "code": code});
+
+                          BlocProvider.of<AuthenticationBloc>(context)
+                              .add(LoggedIn(token: widget.token));
+                        }
+                      }
+                    },
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(8.0),
+                    ),
+                    color: Color.fromRGBO(0, 204, 184, 1),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "REGISTER",
+                        style: GoogleFonts.dmSans(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+              ],
+            ),
           ),
         ),
       ),
