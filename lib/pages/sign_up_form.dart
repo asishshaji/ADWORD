@@ -383,21 +383,21 @@ class _SignUpState extends State<SignUp> {
                         String myRefCode =
                             DateTime.now().millisecondsSinceEpoch.toString();
                         CustomUser user = CustomUser(
-                          username: username,
-                          phonenumber: widget.phonenumber,
-                          weblink: profilelink,
-                          code: code,
+                          username: username.trim(),
+                          phonenumber: widget.phonenumber.trim(),
+                          weblink: profilelink.trim(),
+                          code: code.trim(),
                           isVerified: false,
                           imageurl: _uploadedFileURL,
                           myRefCode:
                               myRefCode.substring(4, myRefCode.length - 1),
                           refCodeUsed: refCodeUsed,
-                          religion: religion,
-                          caste: caste,
+                          religion: religion.trim(),
+                          caste: caste.trim(),
                           age: age,
                           joinedTime:
                               DateTime.now().millisecondsSinceEpoch.toString(),
-                          gender: gender,
+                          gender: gender.trim(),
                         );
                         bool added =
                             await UserRepo().addUserToDB(user, widget.token);

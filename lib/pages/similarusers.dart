@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:time_formatter/time_formatter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SimilarUsersScreen extends StatefulWidget {
   @override
@@ -30,11 +31,13 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
     if (state is Authenticated) {
       QuerySnapshot snapshot = await firebaseFirestore
           .collection("users")
-          .where("religion", isEqualTo: state.user.religion)
+          .where("religion", isEqualTo: state.user.religion.trim())
+          .where("gender", isEqualTo: state.user.gender == "M" ? "F" : "M")
           .orderBy("joinedTime", descending: true)
           .get();
       snapshot.docs.forEach((element) {
         users.add(CustomUser.fromMap(element.data()));
+        print(snapshot.docs);
       });
 
       setState(() {});
@@ -87,6 +90,19 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
                     ),
                   )
                 : Text(""),
+            trailing: IconButton(
+                icon: Icon(
+                  Icons.open_in_new,
+                  color: Colors.black54,
+                ),
+                onPressed: () async {
+                  String url = "https://" + users[index].weblink;
+                  if (await canLaunch(url)) {
+                    await launch(url);
+                  } else {
+                    throw 'Could not launch $url';
+                  }
+                }),
           );
         },
         itemCount: users.length,

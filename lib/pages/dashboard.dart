@@ -78,19 +78,6 @@ class _DashboardState extends State<Dashboard> {
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerFloat,
                 appBar: AppBar(
-                  actions: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.supervised_user_circle,
-                        ),
-                        onPressed: () {
-                          Navigator.pushNamed(context, "/similar");
-                        },
-                      ),
-                    )
-                  ],
                   title: Text(
                     "Hello, ${widget.user.username.split(" ")[0]}",
                     style: GoogleFonts.dmSans(),
@@ -139,6 +126,31 @@ class _DashboardState extends State<Dashboard> {
                                     padding: const EdgeInsets.all(12.0),
                                     child: Text(
                                       "express interest".toUpperCase(),
+                                      style: GoogleFonts.dmSans(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 15,
+                              ),
+                              RaisedButton(
+                                elevation: 4,
+                                color: Color.fromRGBO(0, 204, 184, 1),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, "/similar");
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.8,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Text(
+                                      "View more profiles".toUpperCase(),
                                       style: GoogleFonts.dmSans(
                                         color: Colors.white,
                                         fontSize: 15,
@@ -283,7 +295,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             widget.user.imageurl != null
                 ? CircleAvatar(
-                    radius: 35.0,
+                    radius: 50.0,
                     backgroundImage: NetworkImage(widget.user.imageurl),
                     backgroundColor: Colors.transparent,
                   )

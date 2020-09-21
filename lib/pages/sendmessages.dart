@@ -27,11 +27,12 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
     if (state is Authenticated) {
       QuerySnapshot snapshot = await firebaseFirestore
           .collection("messages")
-          .where("receiver", isEqualTo: state.user.code)
+          .where("receiver", isEqualTo: state.user.code.trim())
           .orderBy("timestamp", descending: true)
           .get();
       snapshot.docs.forEach((element) {
         docs.add(element.id);
+        print(element.data());
         myReq.add(Message.fromMap(element.data()));
       });
       setState(() {});
@@ -132,12 +133,15 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                   Center(
                                     child: RaisedButton(
                                       onPressed: () async {
+                                        print(message.sender);
                                         QuerySnapshot snapshot =
                                             await firebaseFirestore
                                                 .collection("users")
                                                 .where("code",
-                                                    isEqualTo: message.sender)
+                                                    isEqualTo:
+                                                        message.sender.trim())
                                                 .get();
+                                        print(snapshot.docs);
                                         CustomUser user = CustomUser.fromMap(
                                             snapshot.docs[0].data());
 
@@ -154,231 +158,224 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             10.0)), //this right here
-                                                child: AspectRatio(
-                                                  aspectRatio: 1,
-                                                  child: SingleChildScrollView(
-                                                    child: Container(
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .center,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          const SizedBox(
-                                                            height: 30,
-                                                          ),
-                                                          user.imageurl != null
-                                                              ? CircleAvatar(
-                                                                  radius: 50.0,
-                                                                  backgroundImage:
-                                                                      NetworkImage(
-                                                                    user.imageurl,
-                                                                  ),
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .transparent,
-                                                                )
-                                                              : Container(
-                                                                  height: 2,
-                                                                ),
-                                                          const SizedBox(
-                                                            height: 8,
-                                                          ),
-                                                          Center(
-                                                            child: Padding(
-                                                              padding: const EdgeInsets
+                                                child: SingleChildScrollView(
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      const SizedBox(
+                                                        height: 30,
+                                                      ),
+                                                      user.imageurl != null
+                                                          ? CircleAvatar(
+                                                              radius: 50.0,
+                                                              backgroundImage:
+                                                                  NetworkImage(
+                                                                user.imageurl,
+                                                              ),
+                                                              backgroundColor:
+                                                                  Colors
+                                                                      .transparent,
+                                                            )
+                                                          : Container(
+                                                              height: 50,
+                                                            ),
+                                                      const SizedBox(
+                                                        height: 8,
+                                                      ),
+                                                      Center(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
                                                                       .symmetric(
                                                                   vertical: 3,
                                                                   horizontal:
                                                                       10),
-                                                              child: Column(
-                                                                crossAxisAlignment:
-                                                                    CrossAxisAlignment
-                                                                        .center,
+                                                          child: Column(
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
                                                                 children: [
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                            "Name: "),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child:
-                                                                            Text(
-                                                                          user.username,
-                                                                          style:
-                                                                              GoogleFonts.dmSans(
-                                                                            fontSize:
-                                                                                15,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                        "Name: "),
                                                                   ),
-                                                                  const SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                            "Religion: "),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      user.username,
+                                                                      style: GoogleFonts
+                                                                          .dmSans(
+                                                                        fontSize:
+                                                                            15,
                                                                       ),
-                                                                      Expanded(
-                                                                        child:
-                                                                            Text(
-                                                                          user.religion,
-                                                                          style:
-                                                                              GoogleFonts.dmSans(
-                                                                            fontSize:
-                                                                                15,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                            "Caste: "),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child:
-                                                                            Text(
-                                                                          user.caste,
-                                                                          style:
-                                                                              GoogleFonts.dmSans(
-                                                                            fontSize:
-                                                                                15,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                            "Age: "),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child:
-                                                                            Text(
-                                                                          "${user.age.toString()} years",
-                                                                          style:
-                                                                              GoogleFonts.dmSans(
-                                                                            fontSize:
-                                                                                15,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  const SizedBox(
-                                                                    height: 5,
-                                                                  ),
-                                                                  Row(
-                                                                    mainAxisAlignment:
-                                                                        MainAxisAlignment
-                                                                            .start,
-                                                                    children: [
-                                                                      Expanded(
-                                                                        child: Text(
-                                                                            "Contact No:"),
-                                                                      ),
-                                                                      Expanded(
-                                                                        child:
-                                                                            InkWell(
-                                                                          onTap:
-                                                                              () async {
-                                                                            String
-                                                                                url =
-                                                                                "tel:${user.phonenumber}";
-                                                                            if (await canLaunch(url)) {
-                                                                              await launch(url);
-                                                                            } else {
-                                                                              throw 'Could not launch $url';
-                                                                            }
-                                                                          },
-                                                                          child:
-                                                                              Text(
-                                                                            user.phonenumber,
-                                                                            style:
-                                                                                GoogleFonts.dmSans(
-                                                                              fontSize: 15,
-                                                                            ),
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ],
+                                                                    ),
                                                                   ),
                                                                 ],
                                                               ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 5,
-                                                          ),
-                                                          Align(
-                                                            alignment: Alignment
-                                                                .bottomCenter,
-                                                            child: RaisedButton(
-                                                              color: Color
-                                                                  .fromRGBO(
-                                                                      0,
-                                                                      204,
-                                                                      184,
-                                                                      1),
-                                                              onPressed:
-                                                                  () async {
-                                                                String url =
-                                                                    "https://" +
-                                                                        user.weblink;
-                                                                if (await canLaunch(
-                                                                    url)) {
-                                                                  await launch(
-                                                                      url);
-                                                                } else {
-                                                                  throw 'Could not launch $url';
-                                                                }
-                                                              },
-                                                              child: Text(
-                                                                "View Profile"
-                                                                    .toUpperCase(),
-                                                                style:
-                                                                    GoogleFonts
-                                                                        .dmSans(
-                                                                  color: Colors
-                                                                      .white,
-                                                                  fontSize: 14,
-                                                                ),
+                                                              const SizedBox(
+                                                                height: 5,
                                                               ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                        "Religion: "),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      user.religion,
+                                                                      style: GoogleFonts
+                                                                          .dmSans(
+                                                                        fontSize:
+                                                                            15,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                        "Caste: "),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      user.caste,
+                                                                      style: GoogleFonts
+                                                                          .dmSans(
+                                                                        fontSize:
+                                                                            15,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                        "Age: "),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      "${user.age.toString()} years",
+                                                                      style: GoogleFonts
+                                                                          .dmSans(
+                                                                        fontSize:
+                                                                            15,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                        "Contact No:"),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child:
+                                                                        InkWell(
+                                                                      onTap:
+                                                                          () async {
+                                                                        String
+                                                                            url =
+                                                                            "tel:${user.phonenumber}";
+                                                                        if (await canLaunch(
+                                                                            url)) {
+                                                                          await launch(
+                                                                              url);
+                                                                        } else {
+                                                                          throw 'Could not launch $url';
+                                                                        }
+                                                                      },
+                                                                      child:
+                                                                          Text(
+                                                                        user.phonenumber,
+                                                                        style: GoogleFonts
+                                                                            .dmSans(
+                                                                          fontSize:
+                                                                              15,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const SizedBox(
+                                                        height: 5,
+                                                      ),
+                                                      Align(
+                                                        alignment: Alignment
+                                                            .bottomCenter,
+                                                        child: RaisedButton(
+                                                          color: Color.fromRGBO(
+                                                              0, 204, 184, 1),
+                                                          onPressed: () async {
+                                                            String url =
+                                                                "https://" +
+                                                                    user.weblink;
+                                                            if (await canLaunch(
+                                                                url)) {
+                                                              await launch(url);
+                                                            } else {
+                                                              throw 'Could not launch $url';
+                                                            }
+                                                          },
+                                                          child: Text(
+                                                            "View Profile"
+                                                                .toUpperCase(),
+                                                            style: GoogleFonts
+                                                                .dmSans(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 14,
                                                             ),
                                                           ),
-                                                        ],
+                                                        ),
                                                       ),
-                                                    ),
+                                                      const SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                               );
