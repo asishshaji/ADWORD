@@ -32,7 +32,6 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
           .get();
       snapshot.docs.forEach((element) {
         docs.add(element.id);
-        print(element.data());
         myReq.add(Message.fromMap(element.data()));
       });
       setState(() {});
@@ -133,7 +132,6 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                   Center(
                                     child: RaisedButton(
                                       onPressed: () async {
-                                        print(message.sender);
                                         QuerySnapshot snapshot =
                                             await firebaseFirestore
                                                 .collection("users")
@@ -141,7 +139,6 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                     isEqualTo:
                                                         message.sender.trim())
                                                 .get();
-                                        print(snapshot.docs);
                                         CustomUser user = CustomUser.fromMap(
                                             snapshot.docs[0].data());
 

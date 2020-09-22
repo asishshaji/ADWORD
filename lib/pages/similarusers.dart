@@ -37,7 +37,6 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
           .get();
       snapshot.docs.forEach((element) {
         users.add(CustomUser.fromMap(element.data()));
-        print(snapshot.docs);
       });
 
       setState(() {});

@@ -88,10 +88,10 @@ class NumberInput extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Container(
-              width: 100,
+              width: 160,
               child: Image.asset(
                 "assets/logo.png",
-                height: 100,
+                height: 160,
                 fit: BoxFit.contain,
               ),
             ),
@@ -132,7 +132,8 @@ class NumberInput extends StatelessWidget {
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(
-                            phoNo: "+91" + _phoneTextController.value.text));
+                          phoNo: "+91" + _phoneTextController.value.text.trim(),
+                        ));
                       }
                     },
                     color: Color.fromRGBO(0, 204, 184, 1),
