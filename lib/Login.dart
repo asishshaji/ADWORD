@@ -2,6 +2,7 @@ import 'package:adword/bloc/authentication_bloc.dart';
 import 'package:adword/bloc/login_bloc.dart';
 import 'package:adword/pages/sign_up_form.dart';
 import 'package:adword/repo/user_repo.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -75,9 +76,16 @@ class LoadingIndicator extends StatelessWidget {
       );
 }
 
-class NumberInput extends StatelessWidget {
+class NumberInput extends StatefulWidget {
+  @override
+  _NumberInputState createState() => _NumberInputState();
+}
+
+class _NumberInputState extends State<NumberInput> {
   final _formKey = GlobalKey<FormState>();
+
   final _phoneTextController = TextEditingController();
+  String countryCode = "+91";
 
   @override
   Widget build(BuildContext context) {
@@ -103,6 +111,21 @@ class NumberInput extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                   ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                CountryCodePicker(
+                  hideSearch: true,
+                  onChanged: (CountryCode code) {
+                    setState(() {
+                      countryCode = code.dialCode;
+                    });
+                  },
+                  initialSelection: '+91',
+                  showCountryOnly: false,
+                  showOnlyCountryWhenClosed: false,
+                  alignLeft: false,
                 ),
                 Padding(
                   padding:
@@ -132,7 +155,8 @@ class NumberInput extends StatelessWidget {
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
                         BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(
-                          phoNo: "+91" + _phoneTextController.value.text.trim(),
+                          phoNo: countryCode +
+                              _phoneTextController.value.text.trim(),
                         ));
                       }
                     },

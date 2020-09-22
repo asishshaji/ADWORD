@@ -136,6 +136,9 @@ class _SignUpState extends State<SignUp> {
                         Card(
                           elevation: 2,
                           child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                            ),
                             padding: const EdgeInsets.all(20),
                             child: Column(
                               children: [
@@ -345,6 +348,9 @@ class _SignUpState extends State<SignUp> {
                           elevation: 2,
                           child: Container(
                             padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[100],
+                            ),
                             child: Container(
                               child: TextFormField(
                                 onChanged: (value) {
