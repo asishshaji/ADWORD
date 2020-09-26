@@ -40,11 +40,14 @@ class UserRepo {
   }
 
   Future<CustomUser> getCustomUser() async {
-    DocumentSnapshot documentSnapshot =
-        await _firebaseFirestore.collection("users").doc(getUser().uid).get();
+    if (getUser() != null) {
+      DocumentSnapshot documentSnapshot =
+          await _firebaseFirestore.collection("users").doc(getUser().uid).get();
 
-    CustomUser user = CustomUser.fromMap(documentSnapshot.data());
-    return user;
+      CustomUser user = CustomUser.fromMap(documentSnapshot.data());
+      return user;
+    }
+    return null;
   }
 
   Future<bool> addUserToDB(CustomUser user, String token) async {

@@ -15,6 +15,7 @@ class CustomUser {
   final int age;
   final String joinedTime;
   final String gender;
+  final String maritalStatus;
 
   CustomUser({
     this.username,
@@ -31,6 +32,7 @@ class CustomUser {
     this.age,
     this.joinedTime,
     this.gender,
+    this.maritalStatus,
   });
 
   Map<String, dynamic> toMap() {
@@ -48,7 +50,8 @@ class CustomUser {
       'caste': caste,
       'age': age,
       'joinedTime': joinedTime,
-      'gender': gender
+      'gender': gender,
+      'maritalStatus': maritalStatus,
     };
   }
 
@@ -70,6 +73,7 @@ class CustomUser {
       age: map['age'],
       joinedTime: map['joinedTime'],
       gender: map['gender'],
+      maritalStatus: map['maritalStatus'],
     );
   }
 

@@ -25,7 +25,14 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final _formKey = GlobalKey<FormState>();
 
-  String username, code, profilelink, refCodeUsed, religion, caste, gender;
+  String username,
+      code,
+      profilelink,
+      refCodeUsed,
+      religion,
+      caste,
+      gender,
+      maritalStatus;
   int age;
   FirebaseStorage storageInstance = FirebaseStorage.instance;
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -144,10 +151,15 @@ class _SignUpState extends State<SignUp> {
     "Inter-Caste": ["Inter-Caste", "Caste No Bar"]
   };
   List<String> religions = ["Christian", "Hindu", "Muslim", "Inter-Caste"];
+  List<String> status = ["Unmarried", "Divorced", "Widowed"];
 
   String selectedReligion = "Christian";
 
   List<DropdownMenuItem> items = [];
+  List<DropdownMenuItem> statusList = [];
+
+  List<DropdownMenuItem> casteList = [];
+
   File _image;
   final picker = ImagePicker();
   String _uploadedFileURL;
@@ -177,6 +189,13 @@ class _SignUpState extends State<SignUp> {
 
     religions.forEach((element) {
       items.add(DropdownMenuItem(
+        child: Text(element),
+        value: element,
+      ));
+    });
+
+    status.forEach((element) {
+      statusList.add(DropdownMenuItem(
         child: Text(element),
         value: element,
       ));
@@ -263,261 +282,15 @@ class _SignUpState extends State<SignUp> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Card(
-                          elevation: 2,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.grey[50],
-                            ),
-                            padding: const EdgeInsets.all(20),
-                            child: Column(
-                              children: [
-                                Container(
-                                  child: TextFormField(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        username = value;
-                                      });
-                                    },
-                                    keyboardType: TextInputType.name,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: const InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.person,
-                                      ),
-                                      labelText: "Username",
-                                      border: OutlineInputBorder(
-                                        gapPadding: 5,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Enter your name';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  child: TextFormField(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        code = value;
-                                      });
-                                    },
-                                    keyboardType: TextInputType.text,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: const InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.confirmation_number,
-                                      ),
-                                      labelText: "Profile ID",
-                                      border: OutlineInputBorder(
-                                        gapPadding: 5,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Enter valid code';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  child: TextFormField(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        profilelink = value;
-                                      });
-                                    },
-                                    keyboardType: TextInputType.url,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      fillColor: Colors.indigo[400],
-                                      labelText: "Profile link",
-                                      border: OutlineInputBorder(
-                                        gapPadding: 5,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Enter valid link';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                SearchableDropdown.single(
-                                  items: items,
-                                  value: selectedReligion,
-                                  hint: "Religion",
-                                  searchHint: "Search for religion",
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedReligion = value;
-                                    });
-                                  },
-                                  isExpanded: true,
-                                ),
-                                Container(
-                                  child: TextFormField(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        religion = value;
-                                      });
-                                    },
-                                    keyboardType: TextInputType.url,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      fillColor: Colors.indigo[400],
-                                      labelText: "Religion",
-                                      border: OutlineInputBorder(
-                                        gapPadding: 5,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Enter religion';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  child: TextFormField(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        caste = value;
-                                      });
-                                    },
-                                    keyboardType: TextInputType.url,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      fillColor: Colors.indigo[400],
-                                      labelText: "Caste",
-                                      border: OutlineInputBorder(
-                                        gapPadding: 5,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Enter caste';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  child: TextFormField(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        gender = value;
-                                      });
-                                    },
-                                    keyboardType: TextInputType.url,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      fillColor: Colors.indigo[400],
-                                      labelText: "Gender(M/F)",
-                                      border: OutlineInputBorder(
-                                        gapPadding: 5,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      print(value);
-                                      if (value.isEmpty) {
-                                        return 'Enter gender';
-                                      }
-                                      if (value != "M" && value != "F") {
-                                        return "Enter a valid gender";
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Container(
-                                  child: TextFormField(
-                                    onChanged: (value) {
-                                      setState(() {
-                                        age = int.parse(value);
-                                      });
-                                    },
-                                    keyboardType: TextInputType.url,
-                                    textInputAction: TextInputAction.next,
-                                    decoration: InputDecoration(
-                                      fillColor: Colors.indigo[400],
-                                      labelText: "Age",
-                                      border: OutlineInputBorder(
-                                        gapPadding: 5,
-                                      ),
-                                    ),
-                                    validator: (value) {
-                                      if (value.isEmpty) {
-                                        return 'Enter age';
-                                      }
-                                      return null;
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        buildFirstCard(),
                         const SizedBox(
                           height: 10,
                         ),
-                        Card(
-                          elevation: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[50],
-                            ),
-                            child: Container(
-                              child: TextFormField(
-                                onChanged: (value) {
-                                  setState(() {
-                                    refCodeUsed = value;
-                                  });
-                                },
-                                keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.next,
-                                decoration: InputDecoration(
-                                  fillColor: Colors.indigo[400],
-                                  prefixIcon: Icon(
-                                    Icons.person,
-                                  ),
-                                  labelText: "Referral Code",
-                                  border: OutlineInputBorder(
-                                    gapPadding: 5,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                        buildSecondCard(),
+                        const SizedBox(
+                          height: 10,
                         ),
+                        buildThirdCard(),
                       ],
                     ),
                   ),
@@ -552,6 +325,7 @@ class _SignUpState extends State<SignUp> {
                                     .millisecondsSinceEpoch
                                     .toString(),
                                 gender: gender.trim(),
+                                maritalStatus: maritalStatus,
                               );
                               bool added = await UserRepo()
                                   .addUserToDB(user, widget.token);
@@ -612,6 +386,382 @@ class _SignUpState extends State<SignUp> {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Card buildFirstCard() {
+    return Card(
+      elevation: 2,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+        ),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            Container(
+              child: TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    username = value;
+                  });
+                },
+                keyboardType: TextInputType.name,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  labelStyle: GoogleFonts.dmSans(),
+                  labelText: "Username",
+                  border: OutlineInputBorder(
+                    gapPadding: 5,
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter your name';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    code = value;
+                  });
+                },
+                keyboardType: TextInputType.text,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  labelText: "Profile ID",
+                  labelStyle: GoogleFonts.dmSans(),
+                  border: OutlineInputBorder(
+                    gapPadding: 5,
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter valid code';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    profilelink = value;
+                  });
+                },
+                keyboardType: TextInputType.url,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  fillColor: Colors.indigo[400],
+                  labelText: "Profile link",
+                  labelStyle: GoogleFonts.dmSans(),
+                  border: OutlineInputBorder(
+                    gapPadding: 5,
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter valid link';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    gender = value;
+                  });
+                },
+                keyboardType: TextInputType.url,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  labelStyle: GoogleFonts.dmSans(),
+                  fillColor: Colors.indigo[400],
+                  labelText: "Gender(M/F)",
+                  border: OutlineInputBorder(
+                    gapPadding: 5,
+                  ),
+                ),
+                validator: (value) {
+                  print(value);
+                  if (value.isEmpty) {
+                    return 'Enter gender';
+                  }
+                  if (value != "M" && value != "F") {
+                    return "Enter a valid gender";
+                  }
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Container(
+              child: TextFormField(
+                onChanged: (value) {
+                  setState(() {
+                    age = int.parse(value);
+                  });
+                },
+                keyboardType: TextInputType.url,
+                textInputAction: TextInputAction.next,
+                decoration: InputDecoration(
+                  labelStyle: GoogleFonts.dmSans(),
+                  fillColor: Colors.indigo[400],
+                  labelText: "Age",
+                  border: OutlineInputBorder(
+                    gapPadding: 5,
+                  ),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Enter age';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Card buildThirdCard() {
+    return Card(
+      elevation: 2,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+        ),
+        child: Container(
+          child: TextFormField(
+            onChanged: (value) {
+              setState(() {
+                refCodeUsed = value;
+              });
+            },
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelStyle: GoogleFonts.dmSans(),
+              fillColor: Colors.indigo[400],
+              prefixIcon: Icon(
+                Icons.person,
+              ),
+              labelText: "Referral Code",
+              border: OutlineInputBorder(
+                gapPadding: 5,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Card buildSecondCard() {
+    return Card(
+      elevation: 2,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+        ),
+        child: Column(
+          children: [
+            //status
+            SearchableDropdown.single(
+              underline: const SizedBox(),
+              closeButton: null,
+              selectedValueWidgetFn: (item) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    item,
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.dmSans(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
+                );
+              },
+              displayItem: (item, selected) {
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child:
+                      Text(item.value.toString(), style: GoogleFonts.dmSans()),
+                );
+              },
+              icon: null,
+              displayClearIcon: false,
+              style: GoogleFonts.dmSans(
+                color: Colors.grey,
+              ),
+              items: statusList,
+              hint: Text(
+                "Marital Status",
+                style: GoogleFonts.dmSans(
+                  fontSize: 16,
+                ),
+              ),
+              searchHint: Text(
+                "Search for marital status",
+                style: GoogleFonts.dmSans(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  maritalStatus = value;
+                });
+              },
+              isExpanded: true,
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Divider(
+              height: 2,
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            // Religion
+            SearchableDropdown.single(
+              underline: const SizedBox(),
+              closeButton: null,
+              selectedValueWidgetFn: (item) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    item,
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.dmSans(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
+                );
+              },
+              displayItem: (item, selected) {
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child:
+                      Text(item.value.toString(), style: GoogleFonts.dmSans()),
+                );
+              },
+              icon: null,
+              displayClearIcon: false,
+              style: GoogleFonts.dmSans(
+                color: Colors.grey,
+              ),
+              items: items,
+              hint: Text(
+                "Religion",
+                style: GoogleFonts.dmSans(
+                  fontSize: 16,
+                ),
+              ),
+              searchHint: Text(
+                "Search for religion",
+                style: GoogleFonts.dmSans(),
+              ),
+              onChanged: (value) {
+                casteList.clear();
+                religionCasteMap[value].forEach((element) {
+                  casteList.add(DropdownMenuItem(
+                    child: Text(element),
+                    value: element,
+                  ));
+                });
+
+                setState(() {
+                  religion = value;
+                });
+              },
+              isExpanded: true,
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            Divider(
+              height: 2,
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+
+            // Caste
+            SearchableDropdown.single(
+              underline: const SizedBox(),
+              closeButton: null,
+              selectedValueWidgetFn: (item) {
+                return Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    item,
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.dmSans(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
+                );
+              },
+              displayItem: (item, selected) {
+                return Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child:
+                      Text(item.value.toString(), style: GoogleFonts.dmSans()),
+                );
+              },
+              icon: null,
+              displayClearIcon: false,
+              style: GoogleFonts.dmSans(
+                color: Colors.grey,
+              ),
+              items: casteList,
+              hint: Text(
+                "Caste",
+                style: GoogleFonts.dmSans(
+                  fontSize: 16,
+                ),
+              ),
+              searchHint: Text(
+                "Search for caste",
+                style: GoogleFonts.dmSans(),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  caste = value;
+                });
+              },
+              isExpanded: true,
+            ),
+          ],
         ),
       ),
     );
