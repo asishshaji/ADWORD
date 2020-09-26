@@ -1,6 +1,6 @@
 import 'package:adword/bloc/authentication_bloc.dart';
 import 'package:adword/models/CustomUser.dart';
-import 'package:clipboard_manager/clipboard_manager.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,60 +52,68 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
           style: GoogleFonts.dmSans(),
         ),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          return ListTile(
-            onTap: () {
-              ClipboardManager.copyToClipBoard(users[index].code)
-                  .then((result) {
-                final snackBar = SnackBar(
-                  backgroundColor: Color.fromRGBO(0, 204, 184, 1),
-                  content: Text(
-                    'Profile ID: ${users[index].code} copied',
-                    style: GoogleFonts.dmSans(
-                      color: Colors.white,
-                    ),
-                  ),
-                  action: SnackBarAction(
-                    label: 'Undo',
-                    textColor: Colors.white,
-                    onPressed: () {},
-                  ),
-                );
-                Scaffold.of(context).showSnackBar(snackBar);
-              });
-            },
-            title: Text(
-              users[index].code,
-              style: GoogleFonts.dmSans(
-                color: Colors.black,
-              ),
-            ),
-            subtitle: users[index].joinedTime != null
-                ? Text(
-                    "Joined ${formatTime(int.parse(users[index].joinedTime))}",
-                    style: GoogleFonts.dmSans(
-                      color: Colors.grey,
-                    ),
-                  )
-                : Text(""),
-            trailing: IconButton(
-                icon: Icon(
-                  Icons.open_in_new,
-                  color: Colors.black54,
+      body: users.length == 0
+          ? Center(
+              child: Text(
+                "No users found",
+                style: GoogleFonts.dmSans(
+                  fontSize: 20,
                 ),
-                onPressed: () async {
-                  String url = "https://" + users[index].weblink;
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    throw 'Could not launch $url';
-                  }
-                }),
-          );
-        },
-        itemCount: users.length,
-      ),
+              ),
+            )
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                return ListTile(
+                  onTap: () {
+                    FlutterClipboard.copy(users[index].code).then((result) {
+                      final snackBar = SnackBar(
+                        backgroundColor: Color.fromRGBO(0, 204, 184, 1),
+                        content: Text(
+                          'Profile ID: ${users[index].code} copied',
+                          style: GoogleFonts.dmSans(
+                            color: Colors.white,
+                          ),
+                        ),
+                        action: SnackBarAction(
+                          label: 'Undo',
+                          textColor: Colors.white,
+                          onPressed: () {},
+                        ),
+                      );
+                      Scaffold.of(context).showSnackBar(snackBar);
+                    });
+                  },
+                  title: Text(
+                    users[index].code,
+                    style: GoogleFonts.dmSans(
+                      color: Colors.black,
+                    ),
+                  ),
+                  subtitle: users[index].joinedTime != null
+                      ? Text(
+                          "Joined ${formatTime(int.parse(users[index].joinedTime))}",
+                          style: GoogleFonts.dmSans(
+                            color: Colors.grey,
+                          ),
+                        )
+                      : Text(""),
+                  trailing: IconButton(
+                      icon: Icon(
+                        Icons.open_in_new,
+                        color: Colors.black54,
+                      ),
+                      onPressed: () async {
+                        String url = "https://" + users[index].weblink;
+                        if (await canLaunch(url)) {
+                          await launch(url);
+                        } else {
+                          throw 'Could not launch $url';
+                        }
+                      }),
+                );
+              },
+              itemCount: users.length,
+            ),
     );
   }
 }

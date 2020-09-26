@@ -174,6 +174,19 @@ class _NumberInputState extends State<NumberInput> {
                 ),
               ],
             ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: const EdgeInsets.only(top: 10),
+                child: Text(
+                  "Choose Your Love, Then Love Your Choice",
+                  style: GoogleFonts.dmSans(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            )
           ],
         ),
       ),

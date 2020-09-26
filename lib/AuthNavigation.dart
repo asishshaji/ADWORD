@@ -34,8 +34,10 @@ class _AuthNavigationState extends State<AuthNavigation> {
       } else if (state is Authenticated) {
         return Dashboard(user: state.user); //Dashboard
       } else {
-        return Center(
-          child: CircularProgressIndicator(),
+        return Scaffold(
+          body: Center(
+            child: CircularProgressIndicator(),
+          ),
         );
       }
     });

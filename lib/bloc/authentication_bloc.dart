@@ -20,9 +20,9 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is AppStarted) {
-      bool hasToken = userRepo.getUser() != null;
-      if (hasToken) {
-        CustomUser user = await userRepo.getCustomUser();
+      CustomUser user = await userRepo.getCustomUser();
+
+      if (user != null) {
         yield Authenticated(user: user);
       } else {
         yield Unauthenticated();

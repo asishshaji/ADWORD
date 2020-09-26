@@ -85,170 +85,197 @@ class _DashboardState extends State<Dashboard> {
                   elevation: 0,
                 ),
                 body: SingleChildScrollView(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.max,
-                      children: [
-                        buildProfileSection(context),
-                        Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      buildProfileSection(context),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 50,
+                              child: TextField(
+                                controller: _codeController,
+                                decoration: InputDecoration(
+                                  labelText: "Enter Partner ID",
+                                  labelStyle: GoogleFonts.dmSans(
+                                    fontSize: 15,
+                                  ),
+                                  border: OutlineInputBorder(
+                                    gapPadding: 2,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            RaisedButton(
+                              elevation: 4,
+                              color: Color.fromRGBO(0, 204, 184, 1),
+                              onPressed: _sendRequest,
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text(
+                                    "express interest".toUpperCase(),
+                                    style: GoogleFonts.dmSans(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                            RaisedButton(
+                              elevation: 4,
+                              color: Color.fromRGBO(0, 204, 184, 1),
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/similar");
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text(
+                                    "View more profiles".toUpperCase(),
+                                    style: GoogleFonts.dmSans(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Card(
+                        elevation: 2,
+                        child: Container(
+                          padding: const EdgeInsets.all(20.0),
                           width: MediaQuery.of(context).size.width * 0.8,
                           child: Column(
                             children: [
-                              Container(
-                                height: 50,
-                                child: TextField(
-                                  controller: _codeController,
-                                  decoration: InputDecoration(
-                                    labelText: "Enter Partner ID",
-                                    labelStyle: GoogleFonts.dmSans(
-                                      fontSize: 15,
-                                    ),
-                                    border: OutlineInputBorder(
-                                      gapPadding: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 20,
-                              ),
-                              RaisedButton(
-                                elevation: 4,
-                                color: Color.fromRGBO(0, 204, 184, 1),
-                                onPressed: _sendRequest,
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Text(
-                                      "express interest".toUpperCase(),
-                                      style: GoogleFonts.dmSans(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
+                              Text(
+                                "Your Referral code : ${widget.user.myRefCode}",
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 16,
                                 ),
                               ),
                               const SizedBox(
                                 height: 15,
                               ),
-                              RaisedButton(
-                                elevation: 4,
-                                color: Color.fromRGBO(0, 204, 184, 1),
-                                onPressed: () {
-                                  Navigator.pushNamed(context, "/similar");
-                                },
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12.0),
-                                    child: Text(
-                                      "View more profiles".toUpperCase(),
-                                      style: GoogleFonts.dmSans(
-                                        color: Colors.white,
-                                        fontSize: 15,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
+                              Text(
+                                widget.user.joinedUsers != 0
+                                    ? "Referral used : $refUsedCount"
+                                    : "No one used your referral",
+                                style: GoogleFonts.dmSans(
+                                  fontSize: 16,
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 15,
                               ),
                             ],
                           ),
                         ),
-                        Card(
-                          elevation: 2,
-                          child: Container(
-                            padding: const EdgeInsets.all(20.0),
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: Column(
-                              children: [
-                                Text(
-                                  "Your Referral code is ${widget.user.myRefCode}",
-                                  style: GoogleFonts.dmSans(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 15,
-                                ),
-                                Text(
-                                  widget.user.joinedUsers != 0
-                                      ? "Referral used : $refUsedCount"
-                                      : "No one used your referral",
-                                  style: GoogleFonts.dmSans(
-                                    fontSize: 16,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        refUsedCount != 0
-                            ? Material(
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.8,
-                                  child: RaisedButton(
-                                    elevation: 4,
-                                    onPressed: () async {
-                                      if (widget.user.joinedUsers >= 1) {
-                                        String token = await FirebaseMessaging()
-                                            .getToken();
+                      ),
+                      refUsedCount != 0
+                          ? Container(
+                              margin: const EdgeInsets.only(
+                                top: 20,
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: RaisedButton(
+                                elevation: 4,
+                                onPressed: () async {
+                                  DocumentSnapshot documentSnapshot =
+                                      await firebaseFirestore
+                                          .collection("configs")
+                                          .doc("claims")
+                                          .get();
 
-                                        firebaseFirestore
-                                            .collection("claims")
-                                            .doc(widget.user.phonenumber)
-                                            .set({
-                                          "username": widget.user.username,
-                                          "claims": widget.user.joinedUsers,
-                                          "phone": widget.user.phonenumber,
-                                          "rewardGiven": false,
-                                          "token": token
-                                        });
-                                      }
-                                    },
-                                    color: Color.fromRGBO(0, 204, 184, 1),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(12.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          Text(
-                                            "Claim your rewards".toUpperCase(),
-                                            style: GoogleFonts.dmSans(
-                                              fontSize: 15,
-                                              color: Colors.white,
+                                  int countRequired = documentSnapshot
+                                          .data()['claimsthreshold'] ??
+                                      5;
+
+                                  if (widget.user.joinedUsers >=
+                                      countRequired) {
+                                    String token =
+                                        await FirebaseMessaging().getToken();
+
+                                    firebaseFirestore
+                                        .collection("claims")
+                                        .doc(widget.user.phonenumber)
+                                        .set({
+                                      "username": widget.user.username,
+                                      "claims": widget.user.joinedUsers,
+                                      "phone": widget.user.phonenumber,
+                                      "rewardGiven": false,
+                                      "token": token,
+                                    });
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (_) => new AlertDialog(
+                                        content: new Text(
+                                          "Submitted your claim!",
+                                          style: GoogleFonts.dmSans(),
+                                        ),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            child: Text(
+                                              'Close',
+                                              style: GoogleFonts.dmSans(),
                                             ),
-                                          ),
-                                          SvgPicture.asset(
-                                            "assets/reward.svg",
-                                            height: 30,
-                                            fit: BoxFit.contain,
-                                          ),
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
                                         ],
                                       ),
-                                    ),
+                                    );
+                                  }
+                                },
+                                color: Color.fromRGBO(0, 204, 184, 1),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        "Claim your rewards".toUpperCase(),
+                                        style: GoogleFonts.dmSans(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SvgPicture.asset(
+                                        "assets/reward.svg",
+                                        height: 30,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                              )
-                            : const SizedBox(),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                      ],
-                    ),
+                              ),
+                            )
+                          : const SizedBox(),
+                      const SizedBox(
+                        height: 60,
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -256,10 +283,8 @@ class _DashboardState extends State<Dashboard> {
                 backgroundColor: Colors.white,
                 body: Center(
                   child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
                       Container(
                         width: 200,
                         child: SvgPicture.asset(
@@ -295,7 +320,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             widget.user.imageurl != null
                 ? CircleAvatar(
-                    radius: 50.0,
+                    radius: 60.0,
                     backgroundImage: NetworkImage(widget.user.imageurl),
                     backgroundColor: Colors.transparent,
                   )

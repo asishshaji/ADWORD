@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SignUp extends StatefulWidget {
   final String token;
@@ -28,6 +30,124 @@ class _SignUpState extends State<SignUp> {
   FirebaseStorage storageInstance = FirebaseStorage.instance;
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
+  Map<String, List<String>> religionCasteMap = {
+    "Christian": [
+      "Caldiyan",
+      "Syrian",
+      "Jacobite",
+      "Latin",
+      "Marthoma",
+      "Nadar",
+      "Orthodox",
+      "Pentecost",
+      "Protestant",
+      "Roman Catholic",
+      "Caste No Bar"
+    ],
+    "Hindu": [
+      "Adiyan",
+      "Adiyodi",
+      "Aiyyer",
+      "Ambalavasi",
+      "Araya",
+      "Arunthatiyar",
+      "Aryavysya",
+      "Ayyanavar",
+      "Bhattathiri",
+      "Blacksmith",
+      "Brahmin",
+      "Brahmin-Tamil",
+      "Carpenter",
+      "Chakkala Nair",
+      "Cheruman",
+      "Chettiyar",
+      "Chetty",
+      "Chetty-Tamil",
+      "Deevara",
+      "Elayathu",
+      "Embrandiri",
+      "Ezhava",
+      "Ezhuthachan",
+      "Ganaka",
+      "Gauda",
+      "Goldsmith",
+      "Gupthan",
+      "Guruckal",
+      "Kaimal",
+      "Kakkalan",
+      "Kuruppu",
+      "Kanakkan",
+      "Kani",
+      "Kaniyan",
+      "Kartha",
+      "Karuvan",
+      "Kavuthiya",
+      "Kshathriya",
+      "Kumbaran",
+      "Kurava",
+      "Mannadiyar",
+      "Mannan",
+      "Marar",
+      "Mason",
+      "Menon",
+      "Moosari",
+      "Moothan",
+      "Mukkuva",
+      "Muthaliyar",
+      "Nadar",
+      "Naidu",
+      "Nair",
+      "Nambeesan",
+      "Nambiar",
+      "Nambidi",
+      "Namboothiri",
+      "Panan",
+      "Pandithar",
+      "Panicker",
+      "Paraya",
+      "Perumannan",
+      "Pillai",
+      "Pisharody",
+      "Pothuval",
+      "Prajapathy",
+      "Pulaya",
+      "Saliya",
+      "Sambava",
+      "Scheduled Caste",
+      "Scheduled Tribe",
+      "Thandan",
+      "Unnithan",
+      "Vilakkithala Nair",
+      "Viswakarma",
+      "Vysya",
+      "Velan",
+      "Warrier",
+      "Yadhava",
+      "Others",
+      "Caste No Bar"
+    ],
+    "Muslim": [
+      "Ahmedia",
+      "Anafi",
+      "Islam",
+      "Mappila",
+      "Muslims",
+      "Pakhni",
+      "Pattanies",
+      "Rowther",
+      "Shafi",
+      "Shiya",
+      "Sunni",
+      "Others",
+      "Caste No Bar"
+    ],
+    "Inter-Caste": ["Inter-Caste", "Caste No Bar"]
+  };
+  List<String> religions = ["Christian", "Hindu", "Muslim", "Inter-Caste"];
+
+  String selectedReligion = "Christian";
+
+  List<DropdownMenuItem> items = [];
   File _image;
   final picker = ImagePicker();
   String _uploadedFileURL;
@@ -54,6 +174,13 @@ class _SignUpState extends State<SignUp> {
   @override
   void initState() {
     super.initState();
+
+    religions.forEach((element) {
+      items.add(DropdownMenuItem(
+        child: Text(element),
+        value: element,
+      ));
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       QuerySnapshot snapshot = await _firebaseFirestore
@@ -104,24 +231,27 @@ class _SignUpState extends State<SignUp> {
                   padding: const EdgeInsets.only(bottom: 5),
                   child: GestureDetector(
                     onTap: chooseFile,
-                    child: CircleAvatar(
-                      radius: 50,
-                      backgroundColor: Colors.grey.shade100,
-                      child: _uploadedFileURL != null
-                          ? Image.network(
-                              _uploadedFileURL,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            )
-                          : Text(
-                              "Upload Profile Picture",
-                              style: GoogleFonts.dmSans(
-                                color: Colors.black,
-                                fontSize: 12,
+                    child: _uploadedFileURL != null
+                        ? CircleAvatar(
+                            backgroundImage: NetworkImage(_uploadedFileURL),
+                            radius: 60,
+                            backgroundColor: Colors.grey.shade100,
+                          )
+                        : CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.grey.shade100,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                "Upload Profile Picture",
+                                style: GoogleFonts.dmSans(
+                                  color: Colors.black,
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.center,
                               ),
-                              textAlign: TextAlign.center,
                             ),
-                    ),
+                          ),
                   ),
                 ),
                 Form(
@@ -137,7 +267,7 @@ class _SignUpState extends State<SignUp> {
                           elevation: 2,
                           child: Container(
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: Colors.grey[50],
                             ),
                             padding: const EdgeInsets.all(20),
                             child: Column(
@@ -227,6 +357,18 @@ class _SignUpState extends State<SignUp> {
                                 const SizedBox(
                                   height: 20,
                                 ),
+                                SearchableDropdown.single(
+                                  items: items,
+                                  value: selectedReligion,
+                                  hint: "Religion",
+                                  searchHint: "Search for religion",
+                                  onChanged: (value) {
+                                    setState(() {
+                                      selectedReligion = value;
+                                    });
+                                  },
+                                  isExpanded: true,
+                                ),
                                 Container(
                                   child: TextFormField(
                                     onChanged: (value) {
@@ -298,9 +440,11 @@ class _SignUpState extends State<SignUp> {
                                       ),
                                     ),
                                     validator: (value) {
+                                      print(value);
                                       if (value.isEmpty) {
                                         return 'Enter gender';
-                                      } else if (value != "M" || value != "M") {
+                                      }
+                                      if (value != "M" && value != "F") {
                                         return "Enter a valid gender";
                                       }
                                       return null;
@@ -349,7 +493,7 @@ class _SignUpState extends State<SignUp> {
                           child: Container(
                             padding: const EdgeInsets.all(20),
                             decoration: BoxDecoration(
-                              color: Colors.grey[100],
+                              color: Colors.grey[50],
                             ),
                             child: Container(
                               child: TextFormField(
@@ -378,61 +522,87 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  margin: const EdgeInsets.only(
-                    top: 20,
-                  ),
-                  child: RaisedButton(
-                    onPressed: () async {
-                      if (_formKey.currentState.validate()) {
-                        String myRefCode =
-                            DateTime.now().millisecondsSinceEpoch.toString();
-                        CustomUser user = CustomUser(
-                          username: username.trim(),
-                          phonenumber: widget.phonenumber.trim(),
-                          weblink: profilelink.trim(),
-                          code: code.trim(),
-                          isVerified: false,
-                          imageurl: _uploadedFileURL,
-                          myRefCode:
-                              myRefCode.substring(4, myRefCode.length - 1),
-                          refCodeUsed: refCodeUsed,
-                          religion: religion.trim(),
-                          caste: caste.trim(),
-                          age: age,
-                          joinedTime:
-                              DateTime.now().millisecondsSinceEpoch.toString(),
-                          gender: gender.trim(),
-                        );
-                        bool added =
-                            await UserRepo().addUserToDB(user, widget.token);
-                        if (added) {
-                          String msgToken =
-                              await FirebaseMessaging().getToken();
-
-                          FirebaseFirestore.instance
-                              .collection("tokens")
-                              .add({"token": msgToken, "code": code});
-
-                          BlocProvider.of<AuthenticationBloc>(context)
-                              .add(LoggedIn(token: widget.token));
-                        }
-                      }
-                    },
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(8.0),
-                    ),
-                    color: Color.fromRGBO(0, 204, 184, 1),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "REGISTER",
-                        style: GoogleFonts.dmSans(
-                          color: Colors.white,
+                _uploadedFileURL != null
+                    ? Container(
+                        width: MediaQuery.of(context).size.width * 0.9,
+                        margin: const EdgeInsets.only(
+                          top: 20,
                         ),
-                      ),
+                        child: RaisedButton(
+                          onPressed: () async {
+                            if (_formKey.currentState.validate() &&
+                                _uploadedFileURL != null) {
+                              String myRefCode = DateTime.now()
+                                  .millisecondsSinceEpoch
+                                  .toString();
+                              CustomUser user = CustomUser(
+                                username: username.trim(),
+                                phonenumber: widget.phonenumber.trim(),
+                                weblink: profilelink.trim(),
+                                code: code.trim(),
+                                isVerified: false,
+                                imageurl: _uploadedFileURL,
+                                myRefCode: myRefCode.substring(
+                                    4, myRefCode.length - 1),
+                                refCodeUsed: refCodeUsed,
+                                religion: religion.trim(),
+                                caste: caste.trim(),
+                                age: age,
+                                joinedTime: DateTime.now()
+                                    .millisecondsSinceEpoch
+                                    .toString(),
+                                gender: gender.trim(),
+                              );
+                              bool added = await UserRepo()
+                                  .addUserToDB(user, widget.token);
+                              if (added) {
+                                String msgToken =
+                                    await FirebaseMessaging().getToken();
+
+                                FirebaseFirestore.instance
+                                    .collection("tokens")
+                                    .add({"token": msgToken, "code": code});
+
+                                BlocProvider.of<AuthenticationBloc>(context)
+                                    .add(LoggedIn(token: widget.token));
+                              }
+                            }
+                          },
+                          elevation: 2,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(8.0),
+                          ),
+                          color: Color.fromRGBO(0, 204, 184, 1),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Text(
+                              "REGISTER",
+                              style: GoogleFonts.dmSans(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                    : const SizedBox(),
+                const SizedBox(
+                  height: 10,
+                ),
+                InkWell(
+                  onTap: () async {
+                    String url = "https://pastebin.com/raw/ZZtxwMZw";
+                    if (await canLaunch(url)) {
+                      await launch(url);
+                    } else {
+                      throw 'Could not launch $url';
+                    }
+                  },
+                  child: Text(
+                    "View user agreement",
+                    style: GoogleFonts.dmSans(
+                      decoration: TextDecoration.underline,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),

@@ -51,10 +51,10 @@ class UserRepo {
     // TODO
 
     DocumentReference docRef =
-        await _firebaseFirestore.collection("users").doc(token);
+        _firebaseFirestore.collection("users").doc(token);
 
     //set uid here or else anyone reset a user
-    docRef.set(user.toMap());
+    await docRef.set(user.toMap());
 
     return docRef != null;
   }
