@@ -435,6 +435,7 @@ class _SignUpState extends State<SignUp> {
                     code = value;
                   });
                 },
+                textCapitalization: TextCapitalization.characters,
                 keyboardType: TextInputType.text,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
@@ -544,40 +545,6 @@ class _SignUpState extends State<SignUp> {
               height: 20,
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Card buildThirdCard() {
-    return Card(
-      elevation: 2,
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.grey[50],
-        ),
-        child: Container(
-          child: TextFormField(
-            onChanged: (value) {
-              setState(() {
-                refCodeUsed = value;
-              });
-            },
-            keyboardType: TextInputType.text,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              labelStyle: GoogleFonts.dmSans(),
-              fillColor: Colors.indigo[400],
-              prefixIcon: Icon(
-                Icons.person,
-              ),
-              labelText: "Referral Code",
-              border: OutlineInputBorder(
-                gapPadding: 5,
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -762,6 +729,40 @@ class _SignUpState extends State<SignUp> {
               isExpanded: true,
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Card buildThirdCard() {
+    return Card(
+      elevation: 2,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+        ),
+        child: Container(
+          child: TextFormField(
+            onChanged: (value) {
+              setState(() {
+                refCodeUsed = value;
+              });
+            },
+            keyboardType: TextInputType.text,
+            textInputAction: TextInputAction.next,
+            decoration: InputDecoration(
+              labelStyle: GoogleFonts.dmSans(),
+              fillColor: Colors.indigo[400],
+              prefixIcon: Icon(
+                Icons.person,
+              ),
+              labelText: "Referral Code",
+              border: OutlineInputBorder(
+                gapPadding: 5,
+              ),
+            ),
+          ),
         ),
       ),
     );

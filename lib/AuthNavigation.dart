@@ -1,5 +1,6 @@
 import 'package:adword/Login.dart';
 import 'package:adword/bloc/authentication_bloc.dart';
+import 'package:adword/pages/SplashScreen.dart';
 import 'package:adword/pages/dashboard.dart';
 import 'package:adword/repo/user_repo.dart';
 import 'package:flutter/material.dart';
@@ -22,24 +23,17 @@ class _AuthNavigationState extends State<AuthNavigation> {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
         builder: (context, state) {
       if (state is Uninitialized) {
-        return Container(
-          child: Center(
-            child: Text("Splash"),
-          ),
-        ); //Splash Screen
+        return SplashScreen(); //Splash Screen
       } else if (state is Unauthenticated) {
         return LoginScreen(
           userRepo: userRepo,
         ); //LoginScreen
       } else if (state is Authenticated) {
         return Dashboard(user: state.user); //Dashboard
-      } else {
-        return Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+      } else if (state is InitialAuthenticationState) {
+        return SplashScreen();
       }
+      return SplashScreen();
     });
   }
 }

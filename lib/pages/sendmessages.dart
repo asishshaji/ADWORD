@@ -2,6 +2,7 @@ import 'package:adword/bloc/authentication_bloc.dart';
 import 'package:adword/models/CustomUser.dart';
 import 'package:adword/models/Messages.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -73,8 +74,13 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
         ),
         body: myReq.length == 0
             ? Center(
-                child: CircularProgressIndicator(
-                  backgroundColor: Color.fromRGBO(0, 204, 184, 1),
+                child: Container(
+                  height: 120,
+                  width: 120,
+                  child: FlareActor("assets/love_heart.flr",
+                      alignment: Alignment.center,
+                      fit: BoxFit.contain,
+                      animation: "Like heart"),
                 ),
               )
             : ListView.builder(
@@ -203,6 +209,9 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
                                                                         .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
@@ -226,6 +235,9 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                               Row(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
                                                                         .start,
                                                                 children: [
                                                                   Expanded(
@@ -251,6 +263,9 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
                                                                         .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
@@ -275,6 +290,9 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
                                                                         .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
@@ -298,6 +316,36 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                               Row(
                                                                 mainAxisAlignment:
                                                                     MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                        "Marital Status: "),
+                                                                  ),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      "${user.maritalStatus}",
+                                                                      style: GoogleFonts
+                                                                          .dmSans(
+                                                                        fontSize:
+                                                                            15,
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              const SizedBox(
+                                                                height: 5,
+                                                              ),
+                                                              Row(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .start,
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
                                                                         .start,
                                                                 children: [
                                                                   Expanded(

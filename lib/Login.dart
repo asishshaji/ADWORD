@@ -3,6 +3,7 @@ import 'package:adword/bloc/login_bloc.dart';
 import 'package:adword/pages/sign_up_form.dart';
 import 'package:adword/repo/user_repo.dart';
 import 'package:country_code_picker/country_code_picker.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -72,7 +73,14 @@ class _LoginFormState extends State<LoginForm> {
 class LoadingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Center(
-        child: CircularProgressIndicator(),
+        child: Container(
+          height: 120,
+          width: 120,
+          child: FlareActor("assets/love_heart.flr",
+              alignment: Alignment.center,
+              fit: BoxFit.contain,
+              animation: "Like heart"),
+        ),
       );
 }
 

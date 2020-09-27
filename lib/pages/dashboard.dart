@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:share/share.dart';
 
 class Dashboard extends StatefulWidget {
   final CustomUser user;
@@ -98,6 +100,8 @@ class _DashboardState extends State<Dashboard> {
                             Container(
                               height: 50,
                               child: TextField(
+                                textCapitalization:
+                                    TextCapitalization.characters,
                                 controller: _codeController,
                                 decoration: InputDecoration(
                                   labelText: "Enter Partner ID",
@@ -186,92 +190,48 @@ class _DashboardState extends State<Dashboard> {
                                   fontSize: 16,
                                 ),
                               ),
+                              IconButton(
+                                icon: Icon(Icons.share_outlined),
+                                onPressed: () {
+                                  Share.share(
+                                      "Hey there, my referral code is ${widget.user.myRefCode}.\nInstall The Way To Venue https://play.google.com/store/apps/details?id=com.nexus.adword&hl=en_IN");
+                                },
+                              )
                             ],
                           ),
                         ),
                       ),
-                      refUsedCount != 0
-                          ? Container(
-                              margin: const EdgeInsets.only(
-                                top: 20,
-                              ),
-                              width: MediaQuery.of(context).size.width * 0.8,
-                              child: RaisedButton(
-                                elevation: 4,
-                                onPressed: () async {
-                                  DocumentSnapshot documentSnapshot =
-                                      await firebaseFirestore
-                                          .collection("configs")
-                                          .doc("claims")
-                                          .get();
-
-                                  int countRequired = documentSnapshot
-                                          .data()['claimsthreshold'] ??
-                                      5;
-
-                                  if (widget.user.joinedUsers >=
-                                      countRequired) {
-                                    String token =
-                                        await FirebaseMessaging().getToken();
-
-                                    firebaseFirestore
-                                        .collection("claims")
-                                        .doc(widget.user.phonenumber)
-                                        .set({
-                                      "username": widget.user.username,
-                                      "claims": widget.user.joinedUsers,
-                                      "phone": widget.user.phonenumber,
-                                      "rewardGiven": false,
-                                      "token": token,
-                                    });
-
-                                    showDialog(
-                                      context: context,
-                                      builder: (_) => new AlertDialog(
-                                        content: new Text(
-                                          "Submitted your claim!",
-                                          style: GoogleFonts.dmSans(),
-                                        ),
-                                        actions: <Widget>[
-                                          FlatButton(
-                                            child: Text(
-                                              'Close',
-                                              style: GoogleFonts.dmSans(),
-                                            ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }
-                                },
-                                color: Color.fromRGBO(0, 204, 184, 1),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        "Claim your rewards".toUpperCase(),
-                                        style: GoogleFonts.dmSans(
-                                          fontSize: 15,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      SvgPicture.asset(
-                                        "assets/reward.svg",
-                                        height: 30,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ],
+                      Container(
+                        margin: const EdgeInsets.only(
+                          top: 20,
+                        ),
+                        width: MediaQuery.of(context).size.width * 0.8,
+                        child: RaisedButton(
+                          elevation: 4,
+                          onPressed: refUsedCount != 0 ? _claimReward : null,
+                          color: Color.fromRGBO(0, 204, 184, 1),
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  "Claim your rewards".toUpperCase(),
+                                  style: GoogleFonts.dmSans(
+                                    fontSize: 15,
+                                    color: Colors.white,
                                   ),
                                 ),
-                              ),
-                            )
-                          : const SizedBox(),
+                                SvgPicture.asset(
+                                  "assets/reward.svg",
+                                  height: 30,
+                                  fit: BoxFit.contain,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
                       const SizedBox(
                         height: 60,
                       ),
@@ -340,5 +300,45 @@ class _DashboardState extends State<Dashboard> {
         ),
       ),
     );
+  }
+
+  void _claimReward() async {
+    DocumentSnapshot documentSnapshot =
+        await firebaseFirestore.collection("configs").doc("claims").get();
+
+    int countRequired = documentSnapshot.data()['claimsthreshold'] ?? 5;
+
+    if (widget.user.joinedUsers >= countRequired) {
+      String token = await FirebaseMessaging().getToken();
+
+      firebaseFirestore.collection("claims").doc(widget.user.phonenumber).set({
+        "username": widget.user.username,
+        "claims": widget.user.joinedUsers,
+        "phone": widget.user.phonenumber,
+        "rewardGiven": false,
+        "token": token,
+      });
+
+      showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+          content: new Text(
+            "Submitted your claim!",
+            style: GoogleFonts.dmSans(),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Close',
+                style: GoogleFonts.dmSans(),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        ),
+      );
+    }
   }
 }

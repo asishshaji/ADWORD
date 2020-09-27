@@ -20,6 +20,9 @@ class AuthenticationBloc
     AuthenticationEvent event,
   ) async* {
     if (event is AppStarted) {
+      yield InitialAuthenticationState();
+      Future.delayed(const Duration(seconds: 4));
+
       CustomUser user = await userRepo.getCustomUser();
 
       if (user != null) {
@@ -30,6 +33,9 @@ class AuthenticationBloc
     }
 
     if (event is LoggedIn) {
+      yield InitialAuthenticationState();
+      Future.delayed(const Duration(seconds: 4));
+
       yield Loading();
       CustomUser user = await userRepo.getCustomUser();
       yield Authenticated(user: user);
