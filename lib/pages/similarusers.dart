@@ -103,7 +103,7 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
                         color: Colors.black54,
                       ),
                       onPressed: () async {
-                        String url = "https://" + users[index].weblink;
+                        String url = users[index].weblink;
                         if (await canLaunch(url)) {
                           await launch(url);
                         } else {

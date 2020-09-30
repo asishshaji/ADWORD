@@ -502,7 +502,6 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
                 validator: (value) {
-                  print(value);
                   if (value.isEmpty) {
                     return 'Enter gender';
                   }

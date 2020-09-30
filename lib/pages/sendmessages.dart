@@ -215,7 +215,10 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
-                                                                        "Name: "),
+                                                                        "Name: ",
+                                                                        style: GoogleFonts.dmSans(
+                                                                            fontSize:
+                                                                                16)),
                                                                   ),
                                                                   Expanded(
                                                                     child: Text(
@@ -223,7 +226,7 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                       style: GoogleFonts
                                                                           .dmSans(
                                                                         fontSize:
-                                                                            15,
+                                                                            16,
                                                                       ),
                                                                     ),
                                                                   ),
@@ -242,16 +245,17 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
-                                                                        "Religion: "),
+                                                                        "Religion: ",
+                                                                        style: GoogleFonts.dmSans(
+                                                                            fontSize:
+                                                                                16)),
                                                                   ),
                                                                   Expanded(
                                                                     child: Text(
                                                                       user.religion,
-                                                                      style: GoogleFonts
-                                                                          .dmSans(
-                                                                        fontSize:
-                                                                            15,
-                                                                      ),
+                                                                      style: GoogleFonts.dmSans(
+                                                                          fontSize:
+                                                                              16),
                                                                     ),
                                                                   ),
                                                                 ],
@@ -269,16 +273,17 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
-                                                                        "Caste: "),
+                                                                        "Caste: ",
+                                                                        style: GoogleFonts.dmSans(
+                                                                            fontSize:
+                                                                                16)),
                                                                   ),
                                                                   Expanded(
                                                                     child: Text(
                                                                       user.caste,
-                                                                      style: GoogleFonts
-                                                                          .dmSans(
-                                                                        fontSize:
-                                                                            15,
-                                                                      ),
+                                                                      style: GoogleFonts.dmSans(
+                                                                          fontSize:
+                                                                              16),
                                                                     ),
                                                                   ),
                                                                 ],
@@ -296,16 +301,17 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
-                                                                        "Age: "),
+                                                                        "Age: ",
+                                                                        style: GoogleFonts.dmSans(
+                                                                            fontSize:
+                                                                                16)),
                                                                   ),
                                                                   Expanded(
                                                                     child: Text(
                                                                       "${user.age.toString()} years",
-                                                                      style: GoogleFonts
-                                                                          .dmSans(
-                                                                        fontSize:
-                                                                            15,
-                                                                      ),
+                                                                      style: GoogleFonts.dmSans(
+                                                                          fontSize:
+                                                                              16),
                                                                     ),
                                                                   ),
                                                                 ],
@@ -323,16 +329,17 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
-                                                                        "Marital Status: "),
+                                                                        "Marital Status: ",
+                                                                        style: GoogleFonts.dmSans(
+                                                                            fontSize:
+                                                                                16)),
                                                                   ),
                                                                   Expanded(
                                                                     child: Text(
                                                                       "${user.maritalStatus}",
-                                                                      style: GoogleFonts
-                                                                          .dmSans(
-                                                                        fontSize:
-                                                                            15,
-                                                                      ),
+                                                                      style: GoogleFonts.dmSans(
+                                                                          fontSize:
+                                                                              16),
                                                                     ),
                                                                   ),
                                                                 ],
@@ -350,7 +357,10 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                 children: [
                                                                   Expanded(
                                                                     child: Text(
-                                                                        "Contact No:"),
+                                                                        "Contact No:",
+                                                                        style: GoogleFonts.dmSans(
+                                                                            fontSize:
+                                                                                16)),
                                                                   ),
                                                                   Expanded(
                                                                     child:
@@ -374,7 +384,7 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                                         style: GoogleFonts
                                                                             .dmSans(
                                                                           fontSize:
-                                                                              15,
+                                                                              16,
                                                                         ),
                                                                       ),
                                                                     ),
@@ -405,14 +415,18 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                               throw 'Could not launch $url';
                                                             }
                                                           },
-                                                          child: Text(
-                                                            "View Profile"
-                                                                .toUpperCase(),
-                                                            style: GoogleFonts
-                                                                .dmSans(
-                                                              color:
-                                                                  Colors.white,
-                                                              fontSize: 14,
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(
+                                                              "View Profile"
+                                                                  .toUpperCase(),
+                                                              style: GoogleFonts
+                                                                  .dmSans(
+                                                                color: Colors
+                                                                    .white,
+                                                              ),
                                                             ),
                                                           ),
                                                         ),
