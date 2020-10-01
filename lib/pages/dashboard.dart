@@ -4,9 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_downloader/image_downloader.dart';
 import 'package:share/share.dart';
 
 class Dashboard extends StatefulWidget {
@@ -21,29 +23,50 @@ class _DashboardState extends State<Dashboard> {
   TextEditingController _codeController = TextEditingController();
 
   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  var focusNode = new FocusNode();
+
   int refUsedCount;
+  int countRequired;
 
   _sendRequest() async {
+    FocusScope.of(context).unfocus();
+
     if (_codeController.text.length != 0) {
       String code = _codeController.text;
+      QuerySnapshot snapshot = await firebaseFirestore
+          .collection(widget.user.religion)
+          .where("code", isEqualTo: code)
+          .get();
 
-      Message message = Message(
-        isRead: false,
-        receiver: code,
-        timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
-        sender: widget.user.code,
-      );
+      if (snapshot.docs.length != 0) {
+        Message message = Message(
+          isRead: false,
+          receiver: code,
+          timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+          sender: widget.user.code,
+        );
 
-      firebaseFirestore
-          .collection("messages")
-          .doc("${widget.user.code.trim()}_${code.trim()}")
-          .set(
-              message.toMap(),
-              SetOptions(
-                merge: true,
-              ));
+        firebaseFirestore
+            .collection("messages")
+            .doc("${widget.user.code.trim()}_${code.trim()}")
+            .set(
+                message.toMap(),
+                SetOptions(
+                  merge: true,
+                ));
 
-      Navigator.pushNamed(context, "/mymessages");
+        _codeController.clear();
+
+        Navigator.pushNamed(context, "/mymessages");
+      } else
+        Fluttertoast.showToast(
+          msg: "You are not allowed to reach this user",
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 16.0,
+        );
     }
   }
 
@@ -56,6 +79,11 @@ class _DashboardState extends State<Dashboard> {
   }
 
   getRefs() async {
+    DocumentSnapshot documentSnapshot =
+        await firebaseFirestore.collection("configs").doc("claims").get();
+
+    countRequired = documentSnapshot.data()['claimsthreshold'] ?? 5;
+
     User user = FirebaseAuth.instance.currentUser;
     DocumentSnapshot snapshot =
         await firebaseFirestore.collection("users").doc("${user.uid}").get();
@@ -100,6 +128,7 @@ class _DashboardState extends State<Dashboard> {
                             Container(
                               height: 50,
                               child: TextField(
+                                focusNode: focusNode,
                                 textCapitalization:
                                     TextCapitalization.characters,
                                 controller: _codeController,
@@ -184,7 +213,7 @@ class _DashboardState extends State<Dashboard> {
                               ),
                               Text(
                                 widget.user.joinedUsers != 0
-                                    ? "Referral used : $refUsedCount"
+                                    ? "Referral used : ${refUsedCount ?? " "}"
                                     : "No one used your referral",
                                 style: GoogleFonts.dmSans(
                                   fontSize: 16,
@@ -192,46 +221,76 @@ class _DashboardState extends State<Dashboard> {
                               ),
                               IconButton(
                                 icon: Icon(Icons.share_outlined),
-                                onPressed: () {
-                                  Share.share(
-                                      "Hey there, my referral code is ${widget.user.myRefCode}.\nInstall The Way To Venue https://play.google.com/store/apps/details?id=com.nexus.adword&hl=en_IN");
+                                onPressed: () async {
+                                  DocumentSnapshot snapshot =
+                                      await FirebaseFirestore.instance
+                                          .collection("configs")
+                                          .doc("images")
+                                          .get();
+                                  String imageUrl =
+                                      snapshot.data()['shareImage'];
+
+                                  try {
+                                    var imageId =
+                                        await ImageDownloader.downloadImage(
+                                            imageUrl);
+                                    if (imageId == null) {
+                                      return;
+                                    }
+
+                                    var path =
+                                        await ImageDownloader.findPath(imageId);
+
+                                    Share.shareFiles(
+                                      [path],
+                                      text:
+                                          "Hey there, my referral code is ${widget.user.myRefCode}.\nInstall The Way To Venue https://play.google.com/store/apps/details?id=com.nexus.adword&hl=en_IN",
+                                    );
+                                  } on PlatformException catch (error) {
+                                    print(error);
+                                  }
                                 },
                               )
                             ],
                           ),
                         ),
                       ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                          top: 20,
-                        ),
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        child: RaisedButton(
-                          elevation: 4,
-                          onPressed: refUsedCount != 0 ? _claimReward : null,
-                          color: Color.fromRGBO(0, 204, 184, 1),
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  "Claim your rewards".toUpperCase(),
-                                  style: GoogleFonts.dmSans(
-                                    fontSize: 15,
-                                    color: Colors.white,
+                      refUsedCount != null
+                          ? Container(
+                              margin: const EdgeInsets.only(
+                                top: 20,
+                              ),
+                              width: MediaQuery.of(context).size.width * 0.8,
+                              child: RaisedButton(
+                                elevation: 4,
+                                onPressed: refUsedCount > countRequired
+                                    ? _claimReward
+                                    : null,
+                                color: Color.fromRGBO(0, 204, 184, 1),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        "Claim your rewards".toUpperCase(),
+                                        style: GoogleFonts.dmSans(
+                                          fontSize: 15,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      SvgPicture.asset(
+                                        "assets/reward.svg",
+                                        height: 30,
+                                        fit: BoxFit.contain,
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                SvgPicture.asset(
-                                  "assets/reward.svg",
-                                  height: 30,
-                                  fit: BoxFit.contain,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                              ),
+                            )
+                          : const SizedBox(),
                       const SizedBox(
                         height: 60,
                       ),
@@ -303,11 +362,6 @@ class _DashboardState extends State<Dashboard> {
   }
 
   void _claimReward() async {
-    DocumentSnapshot documentSnapshot =
-        await firebaseFirestore.collection("configs").doc("claims").get();
-
-    int countRequired = documentSnapshot.data()['claimsthreshold'] ?? 5;
-
     if (widget.user.joinedUsers >= countRequired) {
       String token = await FirebaseMessaging().getToken();
 

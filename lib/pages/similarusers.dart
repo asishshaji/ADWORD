@@ -2,6 +2,7 @@ import 'package:adword/bloc/authentication_bloc.dart';
 import 'package:adword/models/CustomUser.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -33,6 +34,7 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
           .collection("users")
           .where("religion", isEqualTo: state.user.religion.trim())
           .where("gender", isEqualTo: state.user.gender == "M" ? "F" : "M")
+          .where("isVerified", isEqualTo: true)
           .orderBy("joinedTime", descending: true)
           .get();
       snapshot.docs.forEach((element) {
@@ -54,11 +56,13 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
       ),
       body: users.length == 0
           ? Center(
-              child: Text(
-                "No users found",
-                style: GoogleFonts.dmSans(
-                  fontSize: 20,
-                ),
+              child: Container(
+                height: 120,
+                width: 120,
+                child: FlareActor("assets/love_heart.flr",
+                    alignment: Alignment.center,
+                    fit: BoxFit.contain,
+                    animation: "Like heart"),
               ),
             )
           : ListView.builder(
@@ -100,7 +104,7 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
                   trailing: IconButton(
                       icon: Icon(
                         Icons.open_in_new,
-                        color: Colors.black54,
+                        color: Color.fromRGBO(0, 204, 184, 1),
                       ),
                       onPressed: () async {
                         String url = users[index].weblink;

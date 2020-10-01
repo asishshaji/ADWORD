@@ -124,16 +124,16 @@ class _NumberInputState extends State<NumberInput> {
                   height: 10,
                 ),
                 CountryCodePicker(
-                  hideSearch: true,
+                  searchDecoration: InputDecoration(
+                    hintText: "Search Country",
+                    hintStyle: GoogleFonts.dmSans(),
+                  ),
                   onChanged: (CountryCode code) {
                     setState(() {
                       countryCode = code.dialCode;
                     });
                   },
                   initialSelection: '+91',
-                  showCountryOnly: false,
-                  showOnlyCountryWhenClosed: false,
-                  alignLeft: false,
                 ),
                 Padding(
                   padding:

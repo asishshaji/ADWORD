@@ -304,7 +304,14 @@ class _SignUpState extends State<SignUp> {
                         child: RaisedButton(
                           onPressed: () async {
                             if (_formKey.currentState.validate() &&
-                                _uploadedFileURL != null) {
+                                _uploadedFileURL != null &&
+                                maritalStatus != null &&
+                                religion != null &&
+                                caste != null) {
+                              FirebaseFirestore.instance
+                                  .collection(religion)
+                                  .add({"code": code.trim()});
+
                               String myRefCode = DateTime.now()
                                   .millisecondsSinceEpoch
                                   .toString();
@@ -410,6 +417,7 @@ class _SignUpState extends State<SignUp> {
                 },
                 keyboardType: TextInputType.name,
                 textInputAction: TextInputAction.next,
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   labelStyle: GoogleFonts.dmSans(),
                   labelText: "Username",
@@ -449,6 +457,7 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return 'Enter valid code';
                   }
+
                   return null;
                 },
               ),
@@ -477,7 +486,10 @@ class _SignUpState extends State<SignUp> {
                   if (value.isEmpty) {
                     return 'Enter valid link';
                   }
-                  return null;
+                  if (value.startsWith("http") || value.startsWith("https")) {
+                    return null;
+                  }
+                  return "Link should start with http or https";
                 },
               ),
             ),
@@ -491,6 +503,7 @@ class _SignUpState extends State<SignUp> {
                     gender = value;
                   });
                 },
+                textCapitalization: TextCapitalization.characters,
                 keyboardType: TextInputType.url,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(

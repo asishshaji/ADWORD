@@ -3,6 +3,7 @@ import 'package:adword/bloc/authentication_bloc.dart';
 import 'package:adword/pushnotifications.dart';
 import 'package:adword/repo/user_repo.dart';
 import 'package:adword/routes.dart';
+import 'package:country_code_picker/country_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -92,6 +93,12 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      supportedLocales: [
+        Locale('en'),
+      ],
+      localizationsDelegates: [
+        CountryLocalizations.delegate,
+      ],
       title: 'M2',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

@@ -1,10 +1,12 @@
 import 'package:adword/bloc/authentication_bloc.dart';
 import 'package:adword/models/CustomUser.dart';
 import 'package:adword/models/Messages.dart';
+import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:time_formatter/time_formatter.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -117,11 +119,40 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        "${message.sender}",
-                                        style: GoogleFonts.dmSans(
-                                          fontSize: 20,
-                                        ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            "${message.sender}",
+                                            style: GoogleFonts.dmSans(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                          IconButton(
+                                            icon: Icon(
+                                              Icons.copy_outlined,
+                                              size: 24,
+                                            ),
+                                            onPressed: () {
+                                              FlutterClipboard.copy(
+                                                      message.sender)
+                                                  .then((result) {
+                                                Fluttertoast.showToast(
+                                                    msg:
+                                                        'Profile ID: ${message.sender} copied',
+                                                    toastLength:
+                                                        Toast.LENGTH_LONG,
+                                                    gravity:
+                                                        ToastGravity.BOTTOM,
+                                                    backgroundColor:
+                                                        Colors.white,
+                                                    textColor: Colors.black,
+                                                    fontSize: 16.0);
+                                              });
+                                            },
+                                          )
+                                        ],
                                       ),
                                       const SizedBox(
                                         height: 5,
@@ -406,8 +437,7 @@ class _SendMessagesScreenState extends State<SendMessagesScreen> {
                                                               0, 204, 184, 1),
                                                           onPressed: () async {
                                                             String url =
-                                                                "https://" +
-                                                                    user.weblink;
+                                                                user.weblink;
                                                             if (await canLaunch(
                                                                 url)) {
                                                               await launch(url);
