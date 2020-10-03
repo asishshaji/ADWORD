@@ -535,7 +535,7 @@ class _SignUpState extends State<SignUp> {
                     age = int.parse(value);
                   });
                 },
-                keyboardType: TextInputType.url,
+                keyboardType: TextInputType.number,
                 textInputAction: TextInputAction.next,
                 decoration: InputDecoration(
                   labelStyle: GoogleFonts.dmSans(),

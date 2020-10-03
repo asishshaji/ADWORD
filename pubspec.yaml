@@ -35,6 +35,7 @@ dependencies:
   share: ^0.6.5+2
   flare_flutter: ^2.0.6
   image_downloader: ^0.20.1
+  cached_network_image: ^2.3.2+1
 
 dev_dependencies:
   flutter_test:

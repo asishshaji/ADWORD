@@ -1,5 +1,6 @@
 import 'package:adword/models/CustomUser.dart';
 import 'package:adword/models/Messages.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -113,6 +114,22 @@ class _DashboardState extends State<Dashboard> {
                     style: GoogleFonts.dmSans(),
                   ),
                   elevation: 0,
+                  actions: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: InkWell(
+                        onTap: () => Navigator.pushNamed(context, "/profile",
+                            arguments: {"user": widget.user}),
+                        child: ClipOval(
+                          child: CachedNetworkImage(
+                            imageUrl: widget.user.imageurl,
+                            errorWidget: (context, url, error) =>
+                                Icon(Icons.error),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
                 body: SingleChildScrollView(
                   child: Column(
@@ -125,6 +142,30 @@ class _DashboardState extends State<Dashboard> {
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Column(
                           children: [
+                            RaisedButton(
+                              elevation: 4,
+                              color: Color.fromRGBO(0, 204, 184, 1),
+                              onPressed: () {
+                                Navigator.pushNamed(context, "/similar");
+                              },
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: Text(
+                                    "View more profiles".toUpperCase(),
+                                    style: GoogleFonts.dmSans(
+                                      color: Colors.white,
+                                      fontSize: 15,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 15,
+                            ),
                             Container(
                               height: 50,
                               child: TextField(
@@ -156,30 +197,6 @@ class _DashboardState extends State<Dashboard> {
                                   padding: const EdgeInsets.all(12.0),
                                   child: Text(
                                     "express interest".toUpperCase(),
-                                    style: GoogleFonts.dmSans(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 15,
-                            ),
-                            RaisedButton(
-                              elevation: 4,
-                              color: Color.fromRGBO(0, 204, 184, 1),
-                              onPressed: () {
-                                Navigator.pushNamed(context, "/similar");
-                              },
-                              child: Container(
-                                width: MediaQuery.of(context).size.width * 0.8,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12.0),
-                                  child: Text(
-                                    "View more profiles".toUpperCase(),
                                     style: GoogleFonts.dmSans(
                                       color: Colors.white,
                                       fontSize: 15,
@@ -269,30 +286,19 @@ class _DashboardState extends State<Dashboard> {
                                 color: Color.fromRGBO(0, 204, 184, 1),
                                 child: Padding(
                                   padding: const EdgeInsets.all(12.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Text(
-                                        "Claim your rewards".toUpperCase(),
-                                        style: GoogleFonts.dmSans(
-                                          fontSize: 15,
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                      SvgPicture.asset(
-                                        "assets/reward.svg",
-                                        height: 30,
-                                        fit: BoxFit.contain,
-                                      ),
-                                    ],
+                                  child: Text(
+                                    "Claim your rewards".toUpperCase(),
+                                    style: GoogleFonts.dmSans(
+                                      fontSize: 15,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
                             )
                           : const SizedBox(),
                       const SizedBox(
-                        height: 60,
+                        height: 80,
                       ),
                     ],
                   ),
@@ -300,6 +306,13 @@ class _DashboardState extends State<Dashboard> {
               )
             : Scaffold(
                 backgroundColor: Colors.white,
+                appBar: AppBar(
+                  title: Text(
+                    "Hello, ${widget.user.username.split(" ")[0]}",
+                    style: GoogleFonts.dmSans(),
+                  ),
+                  elevation: 0,
+                ),
                 body: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -338,10 +351,12 @@ class _DashboardState extends State<Dashboard> {
               height: 20,
             ),
             widget.user.imageurl != null
-                ? CircleAvatar(
-                    radius: 60.0,
-                    backgroundImage: NetworkImage(widget.user.imageurl),
-                    backgroundColor: Colors.transparent,
+                ? ClipOval(
+                    child: CachedNetworkImage(
+                      width: 120,
+                      imageUrl: widget.user.imageurl,
+                      errorWidget: (context, url, error) => Icon(Icons.error),
+                    ),
                   )
                 : Container(
                     height: 150,

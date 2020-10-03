@@ -67,53 +67,63 @@ class _SimilarUsersScreenState extends State<SimilarUsersScreen> {
             )
           : ListView.builder(
               itemBuilder: (context, index) {
-                return ListTile(
-                  onTap: () {
-                    FlutterClipboard.copy(users[index].code).then((result) {
-                      final snackBar = SnackBar(
-                        backgroundColor: Color.fromRGBO(0, 204, 184, 1),
-                        content: Text(
-                          'Profile ID: ${users[index].code} copied',
-                          style: GoogleFonts.dmSans(
-                            color: Colors.white,
-                          ),
+                return Column(
+                  children: [
+                    ListTile(
+                      onTap: () {
+                        FlutterClipboard.copy(users[index].code).then((result) {
+                          final snackBar = SnackBar(
+                            backgroundColor: Color.fromRGBO(0, 204, 184, 1),
+                            content: Text(
+                              'Profile ID: ${users[index].code} copied',
+                              style: GoogleFonts.dmSans(
+                                color: Colors.white,
+                              ),
+                            ),
+                            action: SnackBarAction(
+                              label: 'Undo',
+                              textColor: Colors.white,
+                              onPressed: () {},
+                            ),
+                          );
+                          Scaffold.of(context).showSnackBar(snackBar);
+                        });
+                      },
+                      title: Text(
+                        users[index].code,
+                        style: GoogleFonts.dmSans(
+                          color: Colors.black,
                         ),
-                        action: SnackBarAction(
-                          label: 'Undo',
-                          textColor: Colors.white,
-                          onPressed: () {},
-                        ),
-                      );
-                      Scaffold.of(context).showSnackBar(snackBar);
-                    });
-                  },
-                  title: Text(
-                    users[index].code,
-                    style: GoogleFonts.dmSans(
-                      color: Colors.black,
-                    ),
-                  ),
-                  subtitle: users[index].joinedTime != null
-                      ? Text(
-                          "Joined ${formatTime(int.parse(users[index].joinedTime))}",
-                          style: GoogleFonts.dmSans(
-                            color: Colors.grey,
-                          ),
-                        )
-                      : Text(""),
-                  trailing: IconButton(
-                      icon: Icon(
-                        Icons.open_in_new,
-                        color: Color.fromRGBO(0, 204, 184, 1),
                       ),
-                      onPressed: () async {
-                        String url = users[index].weblink;
-                        if (await canLaunch(url)) {
-                          await launch(url);
-                        } else {
-                          throw 'Could not launch $url';
-                        }
-                      }),
+                      subtitle: users[index].joinedTime != null
+                          ? Text(
+                              "Joined ${formatTime(int.parse(users[index].joinedTime))}",
+                              style: GoogleFonts.dmSans(
+                                color: Colors.grey,
+                              ),
+                            )
+                          : Text(""),
+                      trailing: IconButton(
+                          icon: Icon(
+                            Icons.open_in_new,
+                            color: Color.fromRGBO(0, 204, 184, 1),
+                          ),
+                          onPressed: () async {
+                            String url = users[index].weblink;
+                            if (await canLaunch(url)) {
+                              await launch(url);
+                            } else {
+                              throw 'Could not launch $url';
+                            }
+                          }),
+                    ),
+                    Center(
+                      child: SizedBox(
+                        child: const Divider(),
+                        width: MediaQuery.of(context).size.width * 0.95,
+                      ),
+                    ),
+                  ],
                 );
               },
               itemCount: users.length,

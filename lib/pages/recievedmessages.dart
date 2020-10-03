@@ -58,21 +58,31 @@ class _RecievedMessagesScreenState extends State<RecievedMessagesScreen> {
         body: ListView.builder(
           itemBuilder: (context, index) {
             Message message = myReq[index];
-            return ListTile(
-              title: Text(
-                "${message.receiver}",
-                style: GoogleFonts.dmSans(color: Colors.black),
-              ),
-              subtitle: Text(
-                "${formatTime(int.parse(message.timestamp))}",
-                style: GoogleFonts.dmSans(
-                  color: Colors.grey,
+            return Column(
+              children: [
+                ListTile(
+                  title: Text(
+                    "${message.receiver}",
+                    style: GoogleFonts.dmSans(color: Colors.black),
+                  ),
+                  subtitle: Text(
+                    "${formatTime(int.parse(message.timestamp))}",
+                    style: GoogleFonts.dmSans(
+                      color: Colors.grey,
+                    ),
+                  ),
+                  trailing: Icon(
+                    message.isRead ? Mdi.checkAll : Mdi.check,
+                    color: Color.fromRGBO(0, 204, 184, 1),
+                  ),
                 ),
-              ),
-              trailing: Icon(
-                message.isRead ? Mdi.checkAll : Mdi.check,
-                color: Color.fromRGBO(0, 204, 184, 1),
-              ),
+                Center(
+                  child: SizedBox(
+                    child: const Divider(),
+                    width: MediaQuery.of(context).size.width * 0.95,
+                  ),
+                ),
+              ],
             );
           },
           itemCount: myReq.length,
