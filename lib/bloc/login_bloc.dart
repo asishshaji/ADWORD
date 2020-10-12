@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:adword/repo/user_repo.dart';
+import 'package:WayToVenue/repo/user_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:meta/meta.dart';

@@ -1,8 +1,9 @@
-import 'package:adword/AuthNavigation.dart';
-import 'package:adword/bloc/authentication_bloc.dart';
-import 'package:adword/pushnotifications.dart';
-import 'package:adword/repo/user_repo.dart';
-import 'package:adword/routes.dart';
+import 'package:WayToVenue/AuthNavigation.dart';
+import 'package:WayToVenue/bloc/authentication_bloc.dart';
+import 'package:WayToVenue/pushnotifications.dart';
+import 'package:WayToVenue/repo/user_repo.dart';
+import 'package:WayToVenue/routes.dart';
+
 import 'package:country_code_picker/country_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -99,7 +100,7 @@ class _MyAppState extends State<MyApp> {
       localizationsDelegates: [
         CountryLocalizations.delegate,
       ],
-      title: 'M2',
+      title: 'The Way to Venue',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,

@@ -1,8 +1,8 @@
-import 'package:adword/Login.dart';
-import 'package:adword/bloc/authentication_bloc.dart';
-import 'package:adword/pages/SplashScreen.dart';
-import 'package:adword/pages/dashboard.dart';
-import 'package:adword/repo/user_repo.dart';
+import 'package:WayToVenue/Login.dart';
+import 'package:WayToVenue/bloc/authentication_bloc.dart';
+import 'package:WayToVenue/pages/SplashScreen.dart';
+import 'package:WayToVenue/pages/dashboard.dart';
+import 'package:WayToVenue/repo/user_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

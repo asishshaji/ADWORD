@@ -1,5 +1,5 @@
-import 'package:adword/models/CustomUser.dart';
-import 'package:adword/models/Messages.dart';
+import 'package:WayToVenue/models/CustomUser.dart';
+import 'package:WayToVenue/models/Messages.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -14,6 +14,7 @@ import 'package:share/share.dart';
 
 class Dashboard extends StatefulWidget {
   final CustomUser user;
+
   Dashboard({Key key, this.user}) : super(key: key);
 
   @override

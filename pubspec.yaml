@@ -1,4 +1,4 @@
-name: adword
+name: WayToVenue
 description: A new Flutter application.
 
 publish_to: 'none'
@@ -40,9 +40,14 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.8.1
 
 flutter:
   uses-material-design: true
   assets:
     - assets/
 
+flutter_icons:
+  android: 'launcher_icon'
+  ios: true
+  image_path: 'assets/logo.png'

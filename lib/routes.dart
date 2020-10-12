@@ -1,9 +1,9 @@
-import 'package:adword/pages/ProfileScreen.dart';
-import 'package:adword/pages/dashboard.dart';
-import 'package:adword/pages/sendmessages.dart';
-import 'package:adword/pages/recievedmessages.dart';
-import 'package:adword/pages/sign_up_form.dart';
-import 'package:adword/pages/similarusers.dart';
+import 'package:WayToVenue/pages/ProfileScreen.dart';
+import 'package:WayToVenue/pages/dashboard.dart';
+import 'package:WayToVenue/pages/sendmessages.dart';
+import 'package:WayToVenue/pages/recievedmessages.dart';
+import 'package:WayToVenue/pages/sign_up_form.dart';
+import 'package:WayToVenue/pages/similarusers.dart';
 import 'package:flutter/material.dart';
 
 class RouteGenerator {

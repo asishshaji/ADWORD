@@ -12,7 +12,7 @@
     <application
     android:name=".Application"
     android:label="adword"
-    android:icon="@mipmap/ic_launcher"
+    android:icon="@mipmap/launcher_icon"
     
   >
         <activity

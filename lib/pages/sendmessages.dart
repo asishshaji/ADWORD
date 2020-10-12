@@ -1,6 +1,6 @@
-import 'package:adword/bloc/authentication_bloc.dart';
-import 'package:adword/models/CustomUser.dart';
-import 'package:adword/models/Messages.dart';
+import 'package:WayToVenue/bloc/authentication_bloc.dart';
+import 'package:WayToVenue/models/CustomUser.dart';
+import 'package:WayToVenue/models/Messages.dart';
 import 'package:clipboard/clipboard.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flare_flutter/flare_actor.dart';

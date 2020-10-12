@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:adword/models/CustomUser.dart';
-import 'package:adword/repo/user_repo.dart';
+import 'package:WayToVenue/models/CustomUser.dart';
+import 'package:WayToVenue/repo/user_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 

@@ -1,4 +1,4 @@
-import 'package:adword/models/CustomUser.dart';
+import 'package:WayToVenue/models/CustomUser.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -138,6 +138,7 @@ class Box extends StatelessWidget {
             title,
             style: GoogleFonts.dmSans(
               color: Colors.grey.shade700,
+              fontSize: 16,
             ),
           ),
           const SizedBox(
@@ -152,7 +153,9 @@ class Box extends StatelessWidget {
             ),
             child: Text(
               data,
-              style: GoogleFonts.dmSans(),
+              style: GoogleFonts.dmSans(
+                fontSize: 16,
+              ),
             ),
           )
         ],

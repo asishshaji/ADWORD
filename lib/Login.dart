@@ -1,7 +1,7 @@
-import 'package:adword/bloc/authentication_bloc.dart';
-import 'package:adword/bloc/login_bloc.dart';
-import 'package:adword/pages/sign_up_form.dart';
-import 'package:adword/repo/user_repo.dart';
+import 'package:WayToVenue/bloc/authentication_bloc.dart';
+import 'package:WayToVenue/bloc/login_bloc.dart';
+import 'package:WayToVenue/pages/sign_up_form.dart';
+import 'package:WayToVenue/repo/user_repo.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';

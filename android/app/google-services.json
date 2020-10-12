@@ -8,49 +8,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:8986512818:android:efd6713bdf2d620903a8ab",
-        "android_client_info": {
-          "package_name": "com.example.ad_word"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "8986512818-fr8s0u8s5smrk5e4ul4p3b1che4rlsh5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.ad_word",
-            "certificate_hash": "dcb44a794dbaee76e8fe8f371e08aa535d777138"
-          }
-        },
-        {
-          "client_id": "8986512818-4l6cq2ac8bamvase0153066p9a17vulr.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyD4HSrkR_QeOx5cukh1MdM8d9_8-DVju1E"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "8986512818-4l6cq2ac8bamvase0153066p9a17vulr.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
-    },
-    {
-      "client_info": {
         "mobilesdk_app_id": "1:8986512818:android:d0500137b5c06ca603a8ab",
         "android_client_info": {
           "package_name": "com.nexus.adword"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "8986512818-382q4bh1j6ntotmjpfongto7eff1umee.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nexus.adword",
+            "certificate_hash": "100fd8968c8672fd9cf459d65855c2f0611b047d"
+          }
+        },
         {
           "client_id": "8986512818-8colf8d14h8o8699st0rub6haiivfa4q.apps.googleusercontent.com",
           "client_type": 1,
