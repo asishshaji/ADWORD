@@ -11,7 +11,7 @@
          FlutterApplication and put your custom class here. -->
     <application
     android:name=".Application"
-    android:label="adword"
+    android:label="WayToVenue"
     android:icon="@mipmap/launcher_icon"
     
   >

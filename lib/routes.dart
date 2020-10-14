@@ -1,7 +1,7 @@
 import 'package:WayToVenue/pages/ProfileScreen.dart';
 import 'package:WayToVenue/pages/dashboard.dart';
-import 'package:WayToVenue/pages/sendmessages.dart';
-import 'package:WayToVenue/pages/recievedmessages.dart';
+import 'package:WayToVenue/pages/recieved_messages.dart';
+import 'package:WayToVenue/pages/send_messages.dart';
 import 'package:WayToVenue/pages/sign_up_form.dart';
 import 'package:WayToVenue/pages/similarusers.dart';
 import 'package:flutter/material.dart';

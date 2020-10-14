@@ -51,8 +51,6 @@ class UserRepo {
   }
 
   Future<bool> addUserToDB(CustomUser user, String token) async {
-    // TODO
-
     DocumentReference docRef =
         _firebaseFirestore.collection("users").doc(token);
 
