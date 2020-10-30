@@ -1,3 +1,4 @@
+import 'package:WayToVenue/components/CircularUserAvatar.dart';
 import 'package:WayToVenue/models/CustomUser.dart';
 import 'package:WayToVenue/models/Messages.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -11,6 +12,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:share/share.dart';
+import 'package:http/http.dart' as http;
 
 class Dashboard extends StatefulWidget {
   final CustomUser user;
@@ -29,6 +31,7 @@ class _DashboardState extends State<Dashboard> {
 
   int refUsedCount;
   int countRequired;
+  String path;
 
   _sendRequest() async {
     FocusScope.of(context).unfocus();
@@ -81,6 +84,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   getRefs() async {
+    // getting threshold
     DocumentSnapshot documentSnapshot =
         await firebaseFirestore.collection("configs").doc("claims").get();
 
@@ -90,6 +94,24 @@ class _DashboardState extends State<Dashboard> {
     DocumentSnapshot snapshot =
         await firebaseFirestore.collection("users").doc("${user.uid}").get();
     refUsedCount = snapshot.data()['joinedUsers'];
+
+    // getting image
+    DocumentSnapshot imgSnap = await FirebaseFirestore.instance
+        .collection("configs")
+        .doc("images")
+        .get();
+    String imageUrl = imgSnap.data()['shareImage'];
+
+    try {
+      var imageId = await ImageDownloader.downloadImage(imageUrl);
+      if (imageId == null) {
+        return;
+      }
+      path = await ImageDownloader.findPath(imageId);
+    } on PlatformException catch (error) {
+      print(error);
+    }
+
     setState(() {});
   }
 
@@ -121,13 +143,15 @@ class _DashboardState extends State<Dashboard> {
                       child: InkWell(
                         onTap: () => Navigator.pushNamed(context, "/profile",
                             arguments: {"user": widget.user}),
-                        child: ClipOval(
-                          child: CachedNetworkImage(
-                            imageUrl: widget.user.imageurl,
-                            errorWidget: (context, url, error) =>
-                                Icon(Icons.error),
-                          ),
-                        ),
+                        child: widget.user.imageurl != null
+                            ? CircularUserAvatar(
+                                size: 40,
+                                imageurl: widget.user.imageurl,
+                              )
+                            : const SizedBox(
+                                height: 40,
+                                width: 40,
+                              ),
                       ),
                     )
                   ],
@@ -240,33 +264,16 @@ class _DashboardState extends State<Dashboard> {
                               IconButton(
                                 icon: Icon(Icons.share_outlined),
                                 onPressed: () async {
-                                  DocumentSnapshot snapshot =
-                                      await FirebaseFirestore.instance
-                                          .collection("configs")
-                                          .doc("images")
-                                          .get();
-                                  String imageUrl =
-                                      snapshot.data()['shareImage'];
-
-                                  try {
-                                    var imageId =
-                                        await ImageDownloader.downloadImage(
-                                            imageUrl);
-                                    if (imageId == null) {
-                                      return;
+                                  if (path != null)
+                                    try {
+                                      Share.shareFiles(
+                                        [path],
+                                        text:
+                                            "Hey there, my referral code is ${widget.user.myRefCode}.\nInstall The Way To Venue https://play.google.com/store/apps/details?id=com.nexus.adword&hl=en_IN",
+                                      );
+                                    } on PlatformException catch (error) {
+                                      print(error);
                                     }
-
-                                    var path =
-                                        await ImageDownloader.findPath(imageId);
-
-                                    Share.shareFiles(
-                                      [path],
-                                      text:
-                                          "Hey there, my referral code is ${widget.user.myRefCode}.\nInstall The Way To Venue https://play.google.com/store/apps/details?id=com.nexus.adword&hl=en_IN",
-                                    );
-                                  } on PlatformException catch (error) {
-                                    print(error);
-                                  }
                                 },
                               )
                             ],
@@ -352,12 +359,9 @@ class _DashboardState extends State<Dashboard> {
               height: 20,
             ),
             widget.user.imageurl != null
-                ? ClipOval(
-                    child: CachedNetworkImage(
-                      width: 120,
-                      imageUrl: widget.user.imageurl,
-                      errorWidget: (context, url, error) => Icon(Icons.error),
-                    ),
+                ? CircularUserAvatar(
+                    size: 150,
+                    imageurl: widget.user.imageurl,
                   )
                 : Container(
                     height: 150,

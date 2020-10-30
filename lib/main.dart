@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
         new NotificationDetails(androidPlatformChannelSpecifics, null);
     await flutterLocalNotificationsPlugin.show(
       0,
-      'new message arived',
+      'new message arrived',
       'i want ',
       platformChannelSpecifics,
       payload: 'Default_Sound',
@@ -81,12 +81,13 @@ class _MyAppState extends State<MyApp> {
       onBackgroundMessage: myBackgroundHandler,
       onMessage: (Map<String, dynamic> message) async {
         Fluttertoast.showToast(
-            msg: message['notification']['title'],
-            toastLength: Toast.LENGTH_LONG,
-            gravity: ToastGravity.BOTTOM,
-            backgroundColor: Colors.white,
-            textColor: Colors.black,
-            fontSize: 16.0);
+          msg: message['notification']['title'],
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.white,
+          textColor: Colors.black,
+          fontSize: 16.0,
+        );
       },
     );
   }
@@ -100,7 +101,7 @@ class _MyAppState extends State<MyApp> {
       localizationsDelegates: [
         CountryLocalizations.delegate,
       ],
-      title: 'The Way to Venue',
+      title: 'Way to Venue',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Colors.white,
