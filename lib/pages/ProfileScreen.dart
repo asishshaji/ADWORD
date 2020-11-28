@@ -24,6 +24,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String phoneNumber = "";
+  String website;
 
   File _image;
   final picker = ImagePicker();
@@ -39,6 +40,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   getPhone() async {
+    DocumentSnapshot websiteSnapShot = await FirebaseFirestore.instance
+        .collection('configs')
+        .doc("website")
+        .get();
+    website = websiteSnapShot.data()["websitelink"] ?? "http://google.com";
     DocumentSnapshot imgSnap = await FirebaseFirestore.instance
         .collection("configs")
         .doc("contact")
@@ -153,7 +159,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Box(data: widget.user.phonenumber, title: "Contact Number"),
       Box(data: widget.user.weblink, title: "Profile Link"),
       const SizedBox(
-        height: 40,
+        height: 20,
+      ),
+      Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 30,
+          vertical: 6,
+        ),
+        width: MediaQuery.of(context).size.width,
+        child: RaisedButton(
+          elevation: 4,
+          color: Color.fromRGBO(0, 204, 184, 1),
+          onPressed: () async {
+            if (await canLaunch(website)) {
+              await launch(website);
+            } else {
+              throw 'Could not launch $website';
+            }
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Text(
+                "visit our website".toUpperCase(),
+                style: GoogleFonts.dmSans(
+                  color: Colors.white,
+                  fontSize: 15,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ),
+      const SizedBox(
+        height: 50,
       ),
     ];
   }
@@ -199,59 +240,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Column buildBottomContent(String phoneNumber) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        Image.asset(
-          "assets/logo.png",
-          height: 80,
+        const SizedBox(
+          height: 20,
+        ),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Image.asset(
+              "assets/logo.png",
+              height: 120,
+            ),
+          ],
         ),
         Column(
           children: [
             Text(
-              "From",
+              "By",
               style: GoogleFonts.dmSans(
-                fontSize: 18,
+                fontSize: 16,
               ),
             ),
             Text(
               "Nexus Endeavors",
               style: GoogleFonts.dmSans(
                 fontWeight: FontWeight.bold,
-                fontSize: 18,
+                fontSize: 16,
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            GestureDetector(
+              onTap: () async {
+                String url = "tel:${phoneNumber}";
+
+                if (await canLaunch(url)) {
+                  await launch(url);
+                } else {
+                  throw 'Could not launch $url';
+                }
+              },
+              child: Column(
+                children: [
+                  Text(
+                    "Contact at",
+                    style: GoogleFonts.dmSans(
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    phoneNumber,
+                    style: GoogleFonts.dmSans(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
-        ),
-        GestureDetector(
-          onTap: () async {
-            String url = "tel:${phoneNumber}";
-
-            if (await canLaunch(url)) {
-              await launch(url);
-            } else {
-              throw 'Could not launch $url';
-            }
-          },
-          child: Column(
-            children: [
-              Text(
-                "Contact at",
-                style: GoogleFonts.dmSans(
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Text(
-                phoneNumber,
-                style: GoogleFonts.dmSans(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-            ],
-          ),
         ),
       ],
     );

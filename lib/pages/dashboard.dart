@@ -13,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:share/share.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class Dashboard extends StatefulWidget {
   final CustomUser user;
@@ -95,31 +96,17 @@ class _DashboardState extends State<Dashboard> {
         await firebaseFirestore.collection("users").doc("${user.uid}").get();
     refUsedCount = snapshot.data()['joinedUsers'];
 
-    // getting image
-    DocumentSnapshot imgSnap = await FirebaseFirestore.instance
-        .collection("configs")
-        .doc("images")
-        .get();
-    String imageUrl = imgSnap.data()['shareImage'];
-
-    try {
-      var imageId = await ImageDownloader.downloadImage(imageUrl);
-      if (imageId == null) {
-        return;
-      }
-      path = await ImageDownloader.findPath(imageId);
-    } on PlatformException catch (error) {
-      print(error);
-    }
-
     setState(() {});
   }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
         child: widget.user.isVerified
             ? Scaffold(
+                key: _scaffoldKey,
                 floatingActionButton: FloatingActionButton(
                   backgroundColor: Color.fromRGBO(0, 204, 184, 1),
                   onPressed: () {
@@ -132,9 +119,13 @@ class _DashboardState extends State<Dashboard> {
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerFloat,
                 appBar: AppBar(
-                  title: Text(
-                    "Hello, ${widget.user.username.split(" ")[0]}",
-                    style: GoogleFonts.dmSans(),
+                  title: Row(
+                    children: [
+                      Text(
+                        "Hello, ${widget.user.username.split(" ")[0]}",
+                        style: GoogleFonts.dmSans(),
+                      ),
+                    ],
                   ),
                   elevation: 0,
                   actions: [
@@ -163,6 +154,9 @@ class _DashboardState extends State<Dashboard> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       buildProfileSection(context),
+                      const SizedBox(
+                        height: 15,
+                      ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.8,
                         child: Column(
@@ -264,7 +258,36 @@ class _DashboardState extends State<Dashboard> {
                               IconButton(
                                 icon: Icon(Icons.share_outlined),
                                 onPressed: () async {
-                                  if (path != null)
+                                  final snackBar = new SnackBar(
+                                      content: new Text(
+                                          "Downloading image. Please wait"),
+                                      backgroundColor:
+                                          Color.fromRGBO(0, 204, 184, 1));
+
+                                  _scaffoldKey.currentState
+                                      .showSnackBar(snackBar);
+                                  DocumentSnapshot imgSnap =
+                                      await FirebaseFirestore.instance
+                                          .collection("configs")
+                                          .doc("images")
+                                          .get();
+                                  String imageUrl =
+                                      imgSnap.data()['shareImage'];
+
+                                  try {
+                                    var imageId =
+                                        await ImageDownloader.downloadImage(
+                                            imageUrl);
+                                    if (imageId == null) {
+                                      return;
+                                    }
+                                    path =
+                                        await ImageDownloader.findPath(imageId);
+                                  } on PlatformException catch (error) {
+                                    print(error);
+                                  }
+
+                                  if (path != null) {
                                     try {
                                       Share.shareFiles(
                                         [path],
@@ -272,8 +295,16 @@ class _DashboardState extends State<Dashboard> {
                                             "Hey there, my referral code is ${widget.user.myRefCode}.\nInstall The Way To Venue https://play.google.com/store/apps/details?id=com.nexus.adword&hl=en_IN",
                                       );
                                     } on PlatformException catch (error) {
-                                      print(error);
+                                      final snackBar = new SnackBar(
+                                          content: new Text(
+                                              "Error downloading image"),
+                                          backgroundColor:
+                                              Color.fromRGBO(0, 204, 184, 1));
+
+                                      _scaffoldKey.currentState
+                                          .showSnackBar(snackBar);
                                     }
+                                  }
                                 },
                               )
                             ],
