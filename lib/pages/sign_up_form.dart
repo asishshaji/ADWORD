@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:WayToVenue/bloc/authentication_bloc.dart';
 import 'package:WayToVenue/models/CustomUser.dart';
+import 'package:WayToVenue/pages/agreement.dart';
 import 'package:WayToVenue/repo/user_repo.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -371,12 +372,20 @@ class _SignUpState extends State<SignUp> {
                 ),
                 InkWell(
                   onTap: () async {
-                    String url = "https://pastebin.com/raw/ZZtxwMZw";
-                    if (await canLaunch(url)) {
-                      await launch(url);
-                    } else {
-                      throw 'Could not launch $url';
-                    }
+                    DocumentSnapshot agreementSnap = await FirebaseFirestore
+                        .instance
+                        .collection("configs")
+                        .doc("user_agreement")
+                        .get();
+                    String docs = agreementSnap.data()['docs'];
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AgreementScreen(
+                          docs: docs,
+                        ),
+                      ),
+                    );
                   },
                   child: Text(
                     "View user agreement",

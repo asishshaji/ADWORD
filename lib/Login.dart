@@ -76,10 +76,12 @@ class LoadingIndicator extends StatelessWidget {
         child: Container(
           height: 120,
           width: 120,
-          child: FlareActor("assets/love_heart.flr",
-              alignment: Alignment.center,
-              fit: BoxFit.contain,
-              animation: "Like heart"),
+          child: FlareActor(
+            "assets/love_heart.flr",
+            alignment: Alignment.center,
+            fit: BoxFit.contain,
+            animation: "Like heart",
+          ),
         ),
       );
 }
@@ -96,110 +98,109 @@ class _NumberInputState extends State<NumberInput> {
   String countryCode = "+91";
 
   @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            Container(
-              width: 160,
-              child: Image.asset(
-                "assets/logo.png",
-                height: 160,
-                fit: BoxFit.contain,
+  Widget build(BuildContext context) => SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Container(
+                width: 160,
+                child: Image.asset(
+                  "assets/logo.png",
+                  height: 160,
+                  fit: BoxFit.contain,
+                ),
               ),
-            ),
-            Column(
-              children: [
-                Text(
-                  "OTP Verification",
-                  style: GoogleFonts.dmSans(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
+              Column(
+                children: [
+                  Text(
+                    "OTP Verification",
+                    style: GoogleFonts.dmSans(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                CountryCodePicker(
-                  searchDecoration: InputDecoration(
-                    hintText: "Search Country",
-                    hintStyle: GoogleFonts.dmSans(),
+                  const SizedBox(
+                    height: 10,
                   ),
-                  onChanged: (CountryCode code) {
-                    setState(() {
-                      countryCode = code.dialCode;
-                    });
-                  },
-                  initialSelection: '+91',
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: Form(
-                    key: _formKey,
-                    child: EditTextUtils().getCustomEditTextArea(
+                  CountryCodePicker(
+                    searchDecoration: InputDecoration(
+                      hintText: "Search Country",
+                      hintStyle: GoogleFonts.dmSans(),
+                    ),
+                    onChanged: (CountryCode code) {
+                      setState(() {
+                        countryCode = code.dialCode;
+                      });
+                    },
+                    initialSelection: '+91',
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 10),
+                    child: Form(
+                      key: _formKey,
+                      child: EditTextUtils().getCustomEditTextArea(
                         labelValue: "Enter Mobile Number",
                         controller: _phoneTextController,
                         keyboardType: TextInputType.number,
                         icon: Icons.phone,
                         validator: (value) {
                           return validateMobile(value);
-                        }),
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width * 0.9,
-                  margin: const EdgeInsets.only(
-                    top: 20,
-                  ),
-                  child: RaisedButton(
-                    elevation: 2,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: new BorderRadius.circular(8.0),
+                        },
+                      ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState.validate()) {
-                        BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(
-                          phoNo: countryCode +
-                              _phoneTextController.value.text.trim(),
-                        ));
-                      }
-                    },
-                    color: Color.fromRGBO(0, 204, 184, 1),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        "GET OTP",
-                        style: GoogleFonts.dmSans(
-                          color: Colors.white,
+                  ),
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    margin: const EdgeInsets.only(
+                      top: 20,
+                    ),
+                    child: RaisedButton(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(8.0),
+                      ),
+                      onPressed: () {
+                        if (_formKey.currentState.validate()) {
+                          BlocProvider.of<LoginBloc>(context).add(SendOtpEvent(
+                            phoNo: countryCode +
+                                _phoneTextController.value.text.trim(),
+                          ));
+                        }
+                      },
+                      color: Color.fromRGBO(0, 204, 184, 1),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Text(
+                          "GET OTP",
+                          style: GoogleFonts.dmSans(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                margin: const EdgeInsets.only(top: 10),
-                child: Text(
-                  "Choose Your Love, Then Love Your Choice",
-                  style: GoogleFonts.dmSans(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
+                ],
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    "Choose Your Love, Then Love Your Choice",
+                    style: GoogleFonts.dmSans(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   String validateMobile(String value) {
     if (value.length != 10)
